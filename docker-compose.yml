@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes: 
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: bancouat
+      POSTGRES_USER: bancouat
+      POSTGRES_PASSWORD: bancouat
+
+volumes:
+  pgdata:
