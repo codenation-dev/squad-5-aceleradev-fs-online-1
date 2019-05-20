@@ -20,7 +20,12 @@
 
 }
 .LoginTitle{
-    margin-top: 30%;
+  margin-top: 30%;
   font-size: 25px;
   font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+.Buttons{
+    margin: 5%;
+    
+
 }
