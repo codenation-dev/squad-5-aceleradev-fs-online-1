@@ -1,6 +1,17 @@
 version: '3.7'
 
 services:
+  app:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: go run main.go
+    ports:
+      - "5000:5000"
+    volumes: 
+      - ./api/src:/go/src/app
+    links:
+      - db:db-dev
   db:
     image: postgres
     restart: always
