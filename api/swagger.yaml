@@ -1,0 +1,98 @@
+openapi: 3.0.1
+info:
+  title: Swagger Banco UATI
+  description: 'Esta é a documentação da API do banco UATI'
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Aplicação Banco UATI
+  url: https://bancouati.io
+servers:
+- url: https://bancouati.io/api
+tags:
+- name: Segurança
+  description: Controle de acesso
+- name: Usuário
+  description: Operações do usuário
+paths:
+  /auth:
+    post:
+      tags:
+      - Segurança
+      summary: Login na aplicação do banco UATI
+      operationId: authUser
+      requestBody:
+        description: Credênciais para acesso a aplicação
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication'
+        400:
+          description: Invalid username or password
+          content: {}
+  /users:
+    post:
+      tags:
+      - Usuário
+      summary: Cadastrar um novo usuário
+      operationId: createUser
+      requestBody:
+        description: Dados básicos do usuários
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication'
+        400:
+          description: Invalid username or password
+          content: {}
+components:
+  schemas:
+    AuthUser:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Authentication:
+      type: object
+      properties:
+        token:
+          type: string
+    User:
+      required:
+      - username
+      - password
+      - name
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: Authorization
+      in: header
