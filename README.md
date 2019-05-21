@@ -21,3 +21,18 @@ A lista de clientes do banco Uati encontra-se no arquivo ``clientes.csv`` contid
 - Uma tela para listar e detalhar os alertas,  listar os envios de emails e para quem foi enviado, data, hora e outras funcionalidades que o grupo julgar interessantes;
 - Enviar um alerta através de e-mail quando um cliente se tornar um funcionário do banco;
 - Todas essas funcionalidades devem ser expostas para clientes que queiram integrar através de uma API.
+
+
+## Pré-requisitos
+- Instalar 
+  - Docker https://docs.docker.com/install/
+  - Docker-compose https://docs.docker.com/compose/install/
+- Configurar para linux
+  - https://docs.docker.com/install/linux/linux-postinstall/
+
+## Ambiente de desenvolvimento
+
+- Start do banco de dados
+  - docker-compose up -d
+- Stop do banco de dados
+  - docker-compose down
