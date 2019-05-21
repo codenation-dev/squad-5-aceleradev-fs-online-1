@@ -39,6 +39,9 @@ paths:
         400:
           description: Invalid username or password
           content: {}
+        422:
+          description: Invalid request body
+          content: {}
   /users:
     post:
       tags:
@@ -50,17 +53,98 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserCreation'
+      responses:
+        201:
+          description: successful created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Validation error
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+      security:
+        - api_key:
+            - 'write:users'
+    get:
+      tags:
+      - Usuário
+      summary: Listar os usuários
+      operationId: ListUser
       responses:
         200:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Authentication'
-        400:
-          description: Invalid username or password
+                $ref: '#/components/schemas/UserList'
+        404:
+          description: Users not found
           content: {}
+      security:
+        - api_key:
+            - 'read:users'
+  /users/{userId}:
+    put:
+      tags:
+      - Usuário
+      summary: Cadastrar um novo usuário
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Dados básicos do usuários
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+      responses:
+        204:
+          description: successful operation
+          content: {}
+        400:
+          description: Validation error
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+      security:
+        - api_key:
+            - 'write:users'
+    get:
+      tags:
+      - Usuário
+      summary: Listar os usuários
+      operationId: GetUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:users'
 components:
   schemas:
     AuthUser:
@@ -78,11 +162,12 @@ components:
       properties:
         token:
           type: string
-    User:
+    UserCreation:
       required:
       - username
       - password
       - name
+      - email
       type: object
       properties:
         username:
@@ -91,6 +176,31 @@ components:
           type: string
         name:
           type: string
+        email:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    UserList:
+      type: object
+      properties:
+        records:
+          type: integer
+          format: int64
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
   securitySchemes:
     api_key:
       type: apiKey
