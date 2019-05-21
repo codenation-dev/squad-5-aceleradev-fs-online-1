@@ -1,0 +1,523 @@
+openapi: 3.0.1
+info:
+  title: Swagger Banco UATI
+  description: 'Esta é a documentação da API do banco UATI'
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Aplicação Banco UATI
+  url: http://localhost:8000
+servers:
+- url: http://localhost:8000
+tags:
+- name: Segurança
+  description: Controle de acesso
+- name: Usuário
+  description: Operações do usuário
+- name: Clientes
+  description: Operações com clientes
+- name: Alertas
+  description: Consulta de alertas
+- name: Dashboard
+  description: Consulta dados para o Dashboard
+- name: Internos
+  description: Operações internas
+paths:
+  /auth:
+    post:
+      tags:
+      - Segurança
+      summary: Login na aplicação do banco UATI
+      operationId: authUser
+      requestBody:
+        description: Credênciais para acesso a aplicação
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentication'
+        400:
+          description: Invalid username or password
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+  /users:
+    post:
+      tags:
+      - Usuário
+      summary: Cadastrar um novo usuário
+      operationId: createUser
+      requestBody:
+        description: Dados básicos do usuários
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+      responses:
+        201:
+          description: successful created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Validation error
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+      security:
+        - api_key:
+            - 'write:users'
+    get:
+      tags:
+      - Usuário
+      summary: Listar os usuários
+      operationId: ListUser
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Nome do usuário"
+        required: false
+        schema:
+          type: string
+      - name: "email"
+        in: "query"
+        description: "E-mail do usuário"
+        required: false
+        schema:
+          type: string
+      - name: "limit"
+        in: "query"
+        description: "Quantidade de registros"
+        required: false
+        schema:
+          type: integer
+          default: 20
+      - name: "offset"
+        in: "query"
+        description: "Carregar os registros a partir de"
+        required: false
+        schema:
+          type: integer
+          default: 0
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+        404:
+          description: Users not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:users'
+  /users/{userId}:
+    put:
+      tags:
+      - Usuário
+      summary: Alterar um usuário existente
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Dados básicos do usuários
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+      responses:
+        204:
+          description: successful operation
+          content: {}
+        400:
+          description: Validation error
+          content: {}
+        404:
+          description: User not found
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+      security:
+        - api_key:
+            - 'write:users'
+    get:
+      tags:
+      - Usuário
+      summary: Consultar um usuário
+      operationId: GetUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:users'
+  /customers:
+    post:
+      tags:
+      - Clientes
+      summary: Upload nova lista de clientes
+      operationId: uploadCustomers
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  description: file to upload
+                  format: binary
+      responses:
+        204:
+          description: successful operation
+          content: {}
+      security:
+        - api_key:
+            - 'write:customers'
+  /alerts:
+    get:
+      tags:
+      - Alertas
+      summary: Listar os alertas
+      operationId: ListAlerts
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Nome do usuário"
+        required: false
+        schema:
+          type: string
+      - name: "email"
+        in: "query"
+        description: "E-mail do usuário"
+        required: false
+        schema:
+          type: string
+      - name: "customer"
+        in: "query"
+        description: "Nome do cliente"
+        required: false
+        schema:
+          type: string
+      - name: "type"
+        in: "query"
+        description: "Tipo do Alerta"
+        required: false
+        schema:
+          $ref: '#/components/schemas/AlertType'
+      - name: "date_start"
+        in: "query"
+        description: "Data início do alerta"
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: "date_finish"
+        in: "query"
+        description: "Data final do alerta"
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: "limit"
+        in: "query"
+        description: "Quantidade de registros"
+        required: false
+        schema:
+          type: integer
+          default: 20
+      - name: "offset"
+        in: "query"
+        description: "Carregar os registros a partir de"
+        required: false
+        schema:
+          type: integer
+          default: 0
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertList'
+        404:
+          description: Alerts not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:alerts'
+  /alerts/{alertId}:
+    get:
+      tags:
+      - Alertas
+      summary: Consultar um alerta
+      operationId: GetAlert
+      parameters:
+        - name: alertId
+          in: path
+          description: ID do alerta
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+        404:
+          description: User not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:alerts'
+  /dashboard/alerts:
+    get:
+      tags:
+      - Dashboard
+      summary: Consultar estatísticas de alertas
+      operationId: GetDashboardAlerts
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardAlerts'
+        404:
+          description: Records not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:dashboard'
+  /dashboard/customer:
+    get:
+      tags:
+      - Dashboard
+      summary: Consultar ultimos clientes
+      operationId: GetDashboardCustomers
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardCustomers'
+        404:
+          description: Records not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:dashboard'
+  /webcrawler:
+    get:
+      tags:
+      - Internos
+      summary: Atualização de dados
+      description: Inicia rotina para atualização de dados de funcionários do estado de São Paulo
+      operationId: webCrawlerStart
+      responses:
+        200:
+          description: successful operation
+          content: {}
+      security:
+        - service_key:
+            - 'write:customers'
+components:
+  schemas:
+    AuthUser:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Authentication:
+      type: object
+      properties:
+        token:
+          type: string
+    UserCreation:
+      required:
+      - username
+      - password
+      - name
+      - email
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    UserList:
+      type: object
+      properties:
+        records:
+          type: integer
+          format: int64
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    AlertInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/AlertType'
+        customer_name:
+          type: string
+        datetime:
+          type: string
+          format: date-time
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/AlertType'
+        description:
+          type: string
+        customer:
+          type: object
+          properties:
+            id:
+              type: string
+            occupation:
+              type: string
+            department:
+              type: string
+            name: 
+              type: string
+            salary:
+              type: integer
+              format: float64
+        user:
+          $ref: '#/components/schemas/User'
+        users_received:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        datetime:
+          type: string
+          format: date-time
+    AlertList:
+      type: object
+      properties:
+        records:
+          type: integer
+          format: int64
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertInfo'
+    DashboardAlerts:
+      type: array
+      items:
+        type: object
+        properties:
+          month:
+            type: string
+            example: 2019-05
+          alerts:
+            type: array
+            items:
+              type: object
+              properties:
+                type:
+                  $ref: '#/components/schemas/AlertType'
+                customer_quantity:
+                  type: integer
+                  format: int64
+                users_quantity:
+                  type: integer
+                  format: int64
+    DashboardCustomers:
+      type: array
+      items:
+        type: object
+        properties:
+          department:
+            type: string
+          name: 
+            type: string
+          salary:
+            type: integer
+            format: float64
+          datetime:
+            type: string
+            format: date-time
+          type:
+            $ref: '#/components/schemas/AlertType'
+          users_quantity:
+            type: integer
+            format: int64
+    AlertType:
+      type: string
+      enum:
+        - PUBLIC_AGENT
+        - BIGGER_SALARY
+        - BANK_EMPLOYEE
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: Authorization
+      description: Token JWT de autenticação do usuário
+      in: header
+    service_key:
+      type: apiKey
+      name: Authorization
+      description: Token de autorização interna para comunicação entre serviços
+      in: header
