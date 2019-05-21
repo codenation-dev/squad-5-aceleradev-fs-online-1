@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 
-import './styles/login.css'
+import './login.css'
 
 
 export default class Login extends React.Component {
@@ -20,7 +20,7 @@ export default class Login extends React.Component {
                                 id="standard-with-placeholder"
                                 label="Username"
                                 placeholder="userName"
-                                style={{ width: 250 }}
+                                style={{ width: '70%' }}
                                 margin="normal"
                             />
                             <br></br>
@@ -29,9 +29,8 @@ export default class Login extends React.Component {
                                 label="Password"
                                 type="password"
                                 autoComplete="current-password"
-                                style={{ width: 250 }}
+                                style={{ width: '70%' }}
                                 margin="normal"
-
                             />
                         </center>
                     </div>
