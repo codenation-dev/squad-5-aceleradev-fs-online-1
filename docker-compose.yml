@@ -12,6 +12,16 @@ services:
       - ./api/src:/go/src/app
     links:
       - db:db-dev
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    restart: always
+    container_name: "swagger-ui"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./doc/swagger.yaml:/swagger.yaml
+    environment:
+      SWAGGER_JSON: /swagger.yaml
   db:
     image: postgres
     restart: always

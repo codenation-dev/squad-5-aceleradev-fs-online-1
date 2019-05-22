@@ -36,3 +36,6 @@ A lista de clientes do banco Uati encontra-se no arquivo ``clientes.csv`` contid
   - docker-compose up -d
 - Stop do banco de dados
   - docker-compose down
+- Start da documentação OpenAPI/Swagger
+  - docker-compose up -d
+  - Acessar a URL http://localhost:8082/
