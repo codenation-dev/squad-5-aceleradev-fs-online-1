@@ -12,23 +12,23 @@ externalDocs:
 servers:
 - url: http://localhost:8000
 tags:
-- name: Segurança
+- name: Security
   description: Controle de acesso
-- name: Usuário
+- name: Users
   description: Operações do usuário
-- name: Clientes
+- name: Customers
   description: Operações com clientes
-- name: Alertas
+- name: Alerts
   description: Consulta de alertas
 - name: Dashboard
   description: Consulta dados para o Dashboard
-- name: Internos
+- name: Private
   description: Operações internas
 paths:
   /auth:
     post:
       tags:
-      - Segurança
+      - Security
       summary: Login na aplicação do banco UATI
       operationId: authUser
       requestBody:
@@ -53,7 +53,7 @@ paths:
   /users:
     post:
       tags:
-      - Usuário
+      - Users
       summary: Cadastrar um novo usuário
       operationId: createUser
       requestBody:
@@ -80,7 +80,7 @@ paths:
             - 'write:users'
     get:
       tags:
-      - Usuário
+      - Users
       summary: Listar os usuários
       operationId: ListUser
       parameters:
@@ -126,7 +126,7 @@ paths:
   /users/{userId}:
     put:
       tags:
-      - Usuário
+      - Users
       summary: Alterar um usuário existente
       operationId: updateUser
       parameters:
@@ -160,7 +160,7 @@ paths:
             - 'write:users'
     get:
       tags:
-      - Usuário
+      - Users
       summary: Consultar um usuário
       operationId: GetUser
       parameters:
@@ -186,7 +186,7 @@ paths:
   /customers:
     post:
       tags:
-      - Clientes
+      - Customers
       summary: Upload nova lista de clientes
       operationId: uploadCustomers
       requestBody:
@@ -208,7 +208,7 @@ paths:
   /alerts:
     get:
       tags:
-      - Alertas
+      - Alerts
       summary: Listar os alertas
       operationId: ListAlerts
       parameters:
@@ -280,7 +280,7 @@ paths:
   /alerts/{alertId}:
     get:
       tags:
-      - Alertas
+      - Alerts
       summary: Consultar um alerta
       operationId: GetAlert
       parameters:
@@ -344,7 +344,7 @@ paths:
   /webcrawler:
     get:
       tags:
-      - Internos
+      - Private
       summary: Atualização de dados
       description: Inicia rotina para atualização de dados de funcionários do estado de São Paulo
       operationId: webCrawlerStart
@@ -421,6 +421,20 @@ components:
         datetime:
           type: string
           format: date-time
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+        occupation:
+          type: string
+        department:
+          type: string
+        name: 
+          type: string
+        salary:
+          type: number
+          format: float
     Alert:
       type: object
       properties:
@@ -431,19 +445,7 @@ components:
         description:
           type: string
         customer:
-          type: object
-          properties:
-            id:
-              type: string
-            occupation:
-              type: string
-            department:
-              type: string
-            name: 
-              type: string
-            salary:
-              type: integer
-              format: float64
+          $ref: '#/components/schemas/Customer'
         user:
           $ref: '#/components/schemas/User'
         users_received:
@@ -494,8 +496,8 @@ components:
           name: 
             type: string
           salary:
-            type: integer
-            format: float64
+            type: number
+            format: float
           datetime:
             type: string
             format: date-time
