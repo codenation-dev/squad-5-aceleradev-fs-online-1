@@ -1,30 +1,35 @@
 package repository
 
 import (
-	"app/config/database"
-	"database/sql"
+	"app/application/config/database"
 	"fmt"
+	"log"
+
+	"github.com/go-xorm/xorm"
 )
 
 //NewConnection retorna uma nova conexão do banco de dados
-// return: *sql.DB
-func NewConnection() *sql.DB {
-
+// return: *xorm.Engine
+func NewConnection() *xorm.Engine {
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		database.Host, database.Port, database.User, database.Password, database.DBname)
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := xorm.NewEngine("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
 	}
+
+	db.ShowSQL(true)
 
 	err = db.Ping()
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Successfully connected!")
+	log.Println("Successfully connected!")
+
+	RunMigrations(db)
 
 	return db
 }
