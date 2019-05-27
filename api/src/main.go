@@ -9,11 +9,6 @@ import (
 )
 
 func main() {
-
-	start()
-}
-
-func start() {
 	db := repository.NewConnection()
 	log.Printf("Server started")
 

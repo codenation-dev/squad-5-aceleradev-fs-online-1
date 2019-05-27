@@ -5,7 +5,7 @@ import (
 	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
-	"log"
+	"strings"
 
 	"github.com/go-xorm/xorm"
 )
@@ -37,8 +37,10 @@ func (r UserRepository) CreateUser(userCreation *validator.UserCreation) (*model
 	user := builder.UserCreationToUser(userCreation)
 	_, err := r.DB.InsertOne(user)
 	if err != nil {
-		log.Println("CreateUser error", err)
-		return nil, errors.DuplicatedUserError
+		if strings.Index(strings.ToLower(err.Error()), "unique constraint") >= 0 {
+			return nil, errors.DuplicatedUserError
+		}
+		return nil, err
 	}
 	return user, err
 }

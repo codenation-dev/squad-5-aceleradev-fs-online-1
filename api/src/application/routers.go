@@ -14,6 +14,8 @@ import (
 func NewRouter(db *xorm.Engine) *gin.Engine {
 	router := gin.Default()
 
+	//log.SetOutput(gin.DefaultWriter)
+
 	userRepository := repository.UserRepository{db}
 
 	router.GET("/", Index)
