@@ -39,3 +39,7 @@ A lista de clientes do banco Uati encontra-se no arquivo ``clientes.csv`` contid
 - Start da documentação OpenAPI/Swagger
   - docker-compose up -d swagger-ui
   - Acessar a URL http://localhost:8082/
+- Rodar os testes unitários 
+  - go test ./...
+- Rodar os testes unitários com o relatório do cobertura
+  - go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
