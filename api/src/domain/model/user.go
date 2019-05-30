@@ -14,3 +14,9 @@ type User struct {
 	CreatedAt time.Time `json:"-" xorm:"notnull created"`
 	UpdatedAt time.Time `json:"-" xorm:"notnull updated"`
 }
+
+// UserList struct
+type UserList struct {
+	Records int64  `json:"records,omitempty"`
+	Data    []User `json:"data,omitempty"`
+}

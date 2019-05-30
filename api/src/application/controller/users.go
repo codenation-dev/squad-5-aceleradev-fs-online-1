@@ -2,6 +2,7 @@ package controller
 
 import (
 	"app/domain/errors"
+	"app/domain/service"
 	"app/domain/validator"
 	"app/resources/repository"
 	"net/http"
@@ -47,5 +48,26 @@ func GetUser(r *repository.UserRepository) func(c *gin.Context) {
 		default:
 			c.JSON(http.StatusOK, user)
 		}
+	}
+}
+
+// UserController struct
+type UserController struct {
+	Users service.Users
+}
+
+// ListUser - Listar os usuários
+func (uc UserController) ListUser(c *gin.Context) {
+	var q validator.UserListRequest
+	if err := c.ShouldBindQuery(&q); err != nil {
+		validator.AbortWithValidation(c, &err)
+		return
+	}
+
+	users, err := uc.Users.ListUsers(&q)
+	if err != nil {
+		errors.AbortWithError(c, &err)
+	} else {
+		c.JSON(http.StatusOK, users)
 	}
 }

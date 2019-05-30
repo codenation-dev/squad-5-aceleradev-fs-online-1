@@ -13,7 +13,9 @@ import (
 // UserDB interface
 type UserDB interface {
 	GetUser(id string) (*model.User, error)
-	CreateUser(user *model.User) (*model.User, error)
+	CreateUser(userCreation *validator.UserCreation) (*model.User, error)
+	ListUser(q *validator.UserListRequest) (*[]model.User, error)
+	CountUsers(q *validator.UserListRequest) (int64, error)
 }
 
 // UserRepository struct
@@ -43,4 +45,26 @@ func (r UserRepository) CreateUser(userCreation *validator.UserCreation) (*model
 		return nil, err
 	}
 	return user, err
+}
+
+// ListUser lista os usuários
+func (r UserRepository) ListUser(q *validator.UserListRequest) (*[]model.User, error) {
+	var users []model.User
+
+	if err := r.DB.Find(&users); err != nil {
+		return nil, err
+	}
+
+	return &users, nil
+}
+
+// CountUsers conta os usuários
+func (r UserRepository) CountUsers(q *validator.UserListRequest) (int64, error) {
+	user := new(model.User)
+	total, err := r.DB.Count(user)
+	if err != nil {
+		return 0, err
+	}
+
+	return total, nil
 }

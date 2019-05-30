@@ -220,3 +220,56 @@ func TestGetUser_ValidationError(t *testing.T) {
 	assert.Equal(t, 422, w.Code)
 	assert.Equal(t, "[{\"field\":\"UserID\",\"message\":\"Field validation for 'UserID' failed on the 'len' tag\"}]", w.Body.String())
 }
+
+func TestListUser(t *testing.T) {
+	r := initDB(true)
+	defer r.DB.Close()
+	router := gin.Default()
+
+	router.POST("/users", CreateUser(r))
+	router.GET("/users", ListUser(r))
+
+	b := bytes.NewReader([]byte(`{
+		"username": "test",
+		"password":"testsenha",
+		"name":"test nome",
+		"email":"test@mail.com"
+	}`))
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/users", b)
+
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+
+	var objCreated map[string]string
+	err := json.Unmarshal(w.Body.Bytes(), &objCreated)
+	assert.Nil(t, err)
+
+	id, ok := objCreated["id"]
+	assert.True(t, ok)
+	assert.Len(t, id, 26)
+
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("GET", "/users", nil)
+
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+
+	var objSummary map[string]interface{}
+	err = json.Unmarshal(w.Body.Bytes(), &objSummary)
+
+	objList := objSummary["data"].([]map[string]string)
+	assert.Equal(t, 1, objSummary["records"].(int))
+
+	for _, objGet := range objList {
+		assert.Nil(t, err)
+		assert.Equal(t, objGet["id"], id)
+		assert.Equal(t, objCreated["name"], objGet["name"])
+		assert.Equal(t, objCreated["username"], objGet["username"])
+		assert.Equal(t, "", objGet["password"])
+		assert.Equal(t, objCreated["email"], objGet["email"])
+	}
+}
