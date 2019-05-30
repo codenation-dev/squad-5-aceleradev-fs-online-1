@@ -5,6 +5,7 @@ import (
 	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
+	"fmt"
 	"strings"
 
 	"github.com/go-xorm/xorm"
@@ -50,8 +51,12 @@ func (r UserRepository) CreateUser(userCreation *validator.UserCreation) (*model
 // ListUser lista os usuários
 func (r UserRepository) ListUser(q *validator.UserListRequest) (*[]model.User, error) {
 	var users []model.User
+	if q.Limit == 0 {
+		q.Limit = 20
+	}
+	fmt.Printf("\n%#v\n", *q)
 
-	if err := r.DB.Find(&users); err != nil {
+	if err := addFilters(q, r.DB).Limit(q.Limit, q.Offset).Find(&users); err != nil {
 		return nil, err
 	}
 
@@ -61,10 +66,21 @@ func (r UserRepository) ListUser(q *validator.UserListRequest) (*[]model.User, e
 // CountUsers conta os usuários
 func (r UserRepository) CountUsers(q *validator.UserListRequest) (int64, error) {
 	user := new(model.User)
-	total, err := r.DB.Count(user)
+	total, err := addFilters(q, r.DB).Count(user)
 	if err != nil {
 		return 0, err
 	}
 
 	return total, nil
+}
+
+func addFilters(q *validator.UserListRequest, DB *xorm.Engine) *xorm.Session {
+	s := DB.NoCache()
+	if q.Name != "" {
+		s = s.Where("Name like ?", "%"+q.Name+"%")
+	}
+	if q.Email != "" {
+		s = s.Where("Email like ?", "%"+q.Email+"%")
+	}
+	return s
 }

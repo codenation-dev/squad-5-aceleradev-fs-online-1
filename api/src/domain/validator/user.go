@@ -18,5 +18,5 @@ type UserListRequest struct {
 	Name   string `form:"name" binding:"omitempty,max=100"`
 	Email  string `form:"email" binding:"omitempty,max=160"`
 	Limit  int    `form:"limit" binding:"omitempty,max=50"`
-	Offset int    `json:"offset" binding:"omitempty"`
+	Offset int    `form:"offset" binding:"omitempty"`
 }
