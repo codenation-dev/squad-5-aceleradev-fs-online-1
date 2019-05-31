@@ -1,6 +1,7 @@
 package service
 
 import (
+	"app/domain/builder"
 	"app/domain/model"
 	"app/domain/validator"
 	"app/resources/repository"
@@ -9,6 +10,7 @@ import (
 // Users interface
 type Users interface {
 	ListUsers(q *validator.UserListRequest) (*model.UserList, error)
+	UpdateUser(id string, userCreation *validator.UserCreation) (*model.User, error)
 }
 
 // UserService struct
@@ -33,4 +35,17 @@ func (us UserService) ListUsers(q *validator.UserListRequest) (*model.UserList, 
 	userList.Records = total
 
 	return &userList, nil
+}
+
+// UpdateUser Atualiza um usuário
+func (us UserService) UpdateUser(id string, userCreation *validator.UserCreation) (*model.User, error) {
+	user := builder.UserCreationToUser(userCreation)
+	user.ID = id
+
+	err := us.Repository.UpdateUser(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

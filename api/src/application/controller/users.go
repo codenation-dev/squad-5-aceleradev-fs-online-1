@@ -10,6 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserController struct
+type UserController struct {
+	Users service.Users
+}
+
 // CreateUser - Cadastrar um novo usuário
 func CreateUser(r *repository.UserRepository) func(c *gin.Context) {
 	return func(c *gin.Context) {
@@ -51,11 +56,6 @@ func GetUser(r *repository.UserRepository) func(c *gin.Context) {
 	}
 }
 
-// UserController struct
-type UserController struct {
-	Users service.Users
-}
-
 // ListUser - Listar os usuários
 func (uc UserController) ListUser(c *gin.Context) {
 	var q validator.UserListRequest
@@ -69,5 +69,27 @@ func (uc UserController) ListUser(c *gin.Context) {
 		errors.AbortWithError(c, &err)
 	} else {
 		c.JSON(http.StatusOK, users)
+	}
+}
+
+// UpdateUser - Atualiza um usuário
+func (uc UserController) UpdateUser(c *gin.Context) {
+	var userCreation validator.UserCreation
+	if err := c.ShouldBindJSON(&userCreation); err != nil {
+		validator.AbortWithValidation(c, &err)
+		return
+	}
+	var userURI validator.UserURI
+	if err := c.ShouldBindUri(&userURI); err != nil {
+		validator.AbortWithValidation(c, &err)
+		return
+	}
+
+	user, err := uc.Users.UpdateUser(userURI.UserID, &userCreation)
+
+	if err != nil {
+		errors.AbortWithError(c, &err)
+	} else {
+		c.JSON(http.StatusOK, user)
 	}
 }

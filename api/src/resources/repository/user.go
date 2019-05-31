@@ -17,6 +17,7 @@ type UserDB interface {
 	CreateUser(userCreation *validator.UserCreation) (*model.User, error)
 	ListUser(q *validator.UserListRequest) (*[]model.User, error)
 	CountUsers(q *validator.UserListRequest) (int64, error)
+	UpdateUser(u *model.User) error
 }
 
 // UserRepository struct

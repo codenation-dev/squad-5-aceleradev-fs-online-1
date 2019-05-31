@@ -26,7 +26,8 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	router.POST("/users", controller.CreateUser(&userRepository))
 	router.GET("/users/:userId", controller.GetUser(&userRepository))
 	router.GET("/users", uc.ListUser)
-
+	router.PUT("/users/:userId", uc.UpdateUser))
+	
 	return router
 }
 
