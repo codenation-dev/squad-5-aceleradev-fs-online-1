@@ -35,15 +35,15 @@ services:
       POSTGRES_DB: bancouat
       POSTGRES_USER: bancouat
       POSTGRES_PASSWORD: bancouat
-  migrate:
-    image: migrate/migrate
-    container_name: migrate
-    command: ["-database", "postgres://bancouat:bancouat@db/bancouat?sslmode=disable", "-path", "/migrations", "up"]
-    volumes:
-      - ./api/migrations:/migrations
-    depends_on:
-      - db
-    links: 
-      - db
+  # migrate:
+  #   image: migrate/migrate
+  #   container_name: migrate
+  #   command: ["-database", "postgres://bancouat:bancouat@db/bancouat?sslmode=disable", "-path", "/migrations", "up"]
+  #   volumes:
+  #     - ./api/migrations:/migrations
+  #   depends_on:
+  #     - db
+  #   links: 
+  #     - db
 volumes:
   pgdata:

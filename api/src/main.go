@@ -1,16 +1,18 @@
 package main
 
 import (
-	"app/repository"
+	"app/application"
+	"app/resources/repository"
+	"log"
+
 	_ "github.com/lib/pq"
 )
 
 func main() {
+	db := repository.NewConnection()
+	log.Printf("Server started")
 
-	start()
+	router := application.NewRouter(db)
+
+	log.Fatal(router.Run(":5000"))
 }
-
-func start() {
-	repository.NewConnection()
-}
-
