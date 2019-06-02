@@ -11,4 +11,4 @@ var DuplicatedCustomerError error = NewAPIValidationError(http.StatusBadRequest,
 var AllDuplicatedCustomerError error = NewAPIValidationError(http.StatusBadRequest, "Todos os Customer da lista já existem")
 
 // ListDuplicatedCustomerError erro quando alguns customers da lista já exitem
-var ListDuplicatedCustomerError error = NewAPIValidationError(http.StatusPartialContent, "Alguns os Customer da lista já existem")
+var ListDuplicatedCustomerError error = NewAPIValidationError(http.StatusPartialContent, "Alguns Customer da lista já existem")
