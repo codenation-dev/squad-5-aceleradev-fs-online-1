@@ -9,33 +9,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockDB struct {
+type mockDBUser struct {
 	user  *model.User
 	err   error
 	count int64
 }
 
-func (m mockDB) GetUser(id string) (*model.User, error) {
+func (m mockDBUser) GetUser(id string) (*model.User, error) {
 	return m.user, m.err
 }
-func (m mockDB) CreateUser(user *model.User) error {
+func (m mockDBUser) CreateUser(user *model.User) error {
 	return m.err
 }
-func (m mockDB) ListUser(q *validator.UserListRequest) (*[]model.User, error) {
+func (m mockDBUser) ListUser(q *validator.UserListRequest) (*[]model.User, error) {
 	if m.user != nil {
 		return &[]model.User{*m.user}, m.err
 	}
 	return nil, m.err
 }
-func (m mockDB) CountUsers(q *validator.UserListRequest) (int64, error) {
+func (m mockDBUser) CountUsers(q *validator.UserListRequest) (int64, error) {
 	return m.count, m.err
 }
-func (m mockDB) UpdateUser(u *model.User) error {
+func (m mockDBUser) UpdateUser(u *model.User) error {
 	return m.err
 }
 
 func TestUserService_ListUsers(t *testing.T) {
-	mock := mockDB{
+	mock := mockDBUser{
 		user: &model.User{
 			ID:       "12345678901234567890123456",
 			Username: "test",
@@ -57,7 +57,7 @@ func TestUserService_ListUsers(t *testing.T) {
 }
 
 func TestUserService_ListUsers_ErrorList(t *testing.T) {
-	mock := mockDB{
+	mock := mockDBUser{
 		user:  nil,
 		err:   errors.New("generic error"),
 		count: 1,
@@ -79,7 +79,7 @@ func TestUserService_UpdateUser(t *testing.T) {
 		Name:     "test nome",
 		Email:    "test@mail.com",
 	}
-	mock := mockDB{
+	mock := mockDBUser{
 		user:  &user,
 		err:   nil,
 		count: 1,
@@ -106,7 +106,7 @@ func TestUserService_CreateUser(t *testing.T) {
 		Name:     "test nome",
 		Email:    "test@mail.com",
 	}
-	mock := mockDB{
+	mock := mockDBUser{
 		user:  &user,
 		err:   nil,
 		count: 1,
@@ -134,7 +134,7 @@ func TestUserService_GetUser(t *testing.T) {
 		Name:     "test nome",
 		Email:    "test@mail.com",
 	}
-	mock := mockDB{
+	mock := mockDBUser{
 		user:  &user,
 		err:   nil,
 		count: 1,

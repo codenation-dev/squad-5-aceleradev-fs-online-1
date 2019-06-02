@@ -20,7 +20,7 @@ func TestRunMigrations(t *testing.T) {
 	tables, err := db.DBMetas()
 
 	assert.Nil(t, err)
-	assert.Len(t, tables, 1)
+	assert.Len(t, tables, 2)
 }
 
 func TestRunMigrations_Error(t *testing.T) {

@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func initDB(runMigrations bool) *UserRepository {
+func initDBUser(runMigrations bool) *UserRepository {
 	db, err := xorm.NewEngine("sqlite3", "file::memory:?mode=memory&cache=shared")
 	if err != nil {
 		panic(err)
@@ -25,7 +25,7 @@ func initDB(runMigrations bool) *UserRepository {
 }
 
 func TestUserRepository_GetUser(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -43,7 +43,7 @@ func TestUserRepository_GetUser(t *testing.T) {
 }
 
 func TestUserRepository_GetUser_NotFound(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	newUser, err := uRepo.GetUser("1111")
@@ -52,7 +52,7 @@ func TestUserRepository_GetUser_NotFound(t *testing.T) {
 }
 
 func TestUserRepository_CreateUser(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	newUser := model.User{
@@ -77,7 +77,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 }
 
 func TestUserRepository_CreateUser_DuplicatedUser(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	newUser := model.User{
@@ -106,7 +106,7 @@ func TestUserRepository_CreateUser_DuplicatedUser(t *testing.T) {
 }
 
 func TestUserRepository_CountUsers(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -119,7 +119,7 @@ func TestUserRepository_CountUsers(t *testing.T) {
 }
 
 func TestUserRepository_CountUsers_Name(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -132,7 +132,7 @@ func TestUserRepository_CountUsers_Name(t *testing.T) {
 }
 
 func TestUserRepository_CountUsers_Email(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -145,7 +145,7 @@ func TestUserRepository_CountUsers_Email(t *testing.T) {
 }
 
 func TestUserRepository_ListUser(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -158,7 +158,7 @@ func TestUserRepository_ListUser(t *testing.T) {
 }
 
 func TestUserRepository_ListUser_Name(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -171,7 +171,7 @@ func TestUserRepository_ListUser_Name(t *testing.T) {
 }
 
 func TestUserRepository_ListUser_Email(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -184,7 +184,7 @@ func TestUserRepository_ListUser_Email(t *testing.T) {
 }
 
 func TestUserRepository_ListUser_Limit(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -208,7 +208,7 @@ func TestUserRepository_ListUser_Limit(t *testing.T) {
 }
 
 func TestUserRepository_ListUser_Offset(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -233,7 +233,7 @@ func TestUserRepository_ListUser_Offset(t *testing.T) {
 }
 
 func TestUserRepository_UpdateUser(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
@@ -265,7 +265,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 }
 
 func TestUserRepository_UpdateUser_DuplicatedUser(t *testing.T) {
-	uRepo := initDB(true)
+	uRepo := initDBUser(true)
 	defer uRepo.DB.Close()
 
 	mockUsers(uRepo.DB)
