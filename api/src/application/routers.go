@@ -39,7 +39,7 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	router.PUT("/users/:userId", uc.UpdateUser)
 
 	// Customers
-	router.POST("/customers", cc.UpdateCustomer)
+	router.POST("/customers", cc.UploadCustomer)
 
 	return router
 }
