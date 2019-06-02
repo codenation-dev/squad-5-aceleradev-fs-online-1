@@ -1,9 +1,10 @@
 # Gestão de clientes Banco Uati
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/codenation-dev/squad-5-aceleradev-fs-online-1)](https://goreportcard.com/report/github.com/codenation-dev/squad-5-aceleradev-fs-online-1)
+
 ## Objetivo
 
 O objetivo deste produto é monitorar e gerar alertas da captura de uma determinada fonte com base em uma determinada base do cliente e regra pré estabelecida.
-
 
 ## Contextualização
 

@@ -1,6 +1,7 @@
 package application
 
 import (
+	"app/domain/service"
 	"app/resources/repository"
 	"net/http"
 
@@ -14,13 +15,22 @@ import (
 func NewRouter(db *xorm.Engine) *gin.Engine {
 	router := gin.Default()
 
-	//log.SetOutput(gin.DefaultWriter)
+	userRepository := repository.UserRepository{
+		DB: db,
+	}
+	userService := service.UserService{
+		Repository: userRepository,
+	}
 
-	userRepository := repository.UserRepository{db}
+	uc := controller.UserController{
+		Users: &userService,
+	}
 
 	router.GET("/", Index)
-	router.POST("/users", controller.CreateUser(&userRepository))
-	router.GET("/users/:userId", controller.GetUser(&userRepository))
+	router.POST("/users", uc.CreateUser)
+	router.GET("/users/:userId", uc.GetUser)
+	router.GET("/users", uc.ListUser)
+	router.PUT("/users/:userId", uc.UpdateUser)
 
 	return router
 }

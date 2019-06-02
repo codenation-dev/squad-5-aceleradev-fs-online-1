@@ -3,6 +3,7 @@ package validator
 import (
 	"errors"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -36,4 +37,22 @@ func TestAbortWithValidation_ValidationErrors(t *testing.T) {
 
 	assert.Equal(t, 422, w.Code)
 	assert.Equal(t, "[{\"field\":\"field\",\"message\":\"Field validation for 'field' failed on the 'len' tag\"}]", w.Body.String())
+}
+
+func TestAbortWithValidation_StrconvErrors(t *testing.T) {
+	type args struct {
+	}
+	var err error = &strconv.NumError{
+		Func: "Atoi",
+		Num:  "abc",
+		Err:  errors.New("conversion error"),
+	}
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	AbortWithValidation(c, &err)
+
+	assert.Equal(t, 422, w.Code)
+	assert.Equal(t, "[{\"field\":\"Query\",\"message\":\"\\\"abc\\\" conversion error\"}]", w.Body.String())
 }
