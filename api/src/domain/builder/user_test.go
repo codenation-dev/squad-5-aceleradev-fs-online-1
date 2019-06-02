@@ -9,7 +9,12 @@ import (
 )
 
 func TestUserCreationToUser(t *testing.T) {
-	args := validator.UserCreation{"user", "pass", "name", "test@mail.com"}
+	args := validator.UserCreation{
+		Username: "user",
+		Password: "pass",
+		Name:     "name",
+		Email:    "test@mail.com",
+	}
 	want := model.User{
 		Username: "user",
 		Password: "pass",

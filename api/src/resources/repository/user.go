@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"app/domain/builder"
 	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
@@ -14,7 +13,7 @@ import (
 // UserDB interface
 type UserDB interface {
 	GetUser(id string) (*model.User, error)
-	CreateUser(userCreation *validator.UserCreation) (*model.User, error)
+	CreateUser(user *model.User) error
 	ListUser(q *validator.UserListRequest) (*[]model.User, error)
 	CountUsers(q *validator.UserListRequest) (int64, error)
 	UpdateUser(u *model.User) error
@@ -37,16 +36,15 @@ func (r UserRepository) GetUser(id string) (*model.User, error) {
 }
 
 // CreateUser cria um novo usuário
-func (r UserRepository) CreateUser(userCreation *validator.UserCreation) (*model.User, error) {
-	user := builder.UserCreationToUser(userCreation)
+func (r UserRepository) CreateUser(user *model.User) error {
 	_, err := r.DB.InsertOne(user)
 	if err != nil {
 		if strings.Index(strings.ToLower(err.Error()), "unique constraint") >= 0 {
-			return nil, errors.DuplicatedUserError
+			return errors.DuplicatedUserError
 		}
-		return nil, err
+		return err
 	}
-	return user, err
+	return err
 }
 
 // ListUser lista os usuários
@@ -73,6 +71,19 @@ func (r UserRepository) CountUsers(q *validator.UserListRequest) (int64, error) 
 	}
 
 	return total, nil
+}
+
+// UpdateUser atualiza um usuário já existente
+func (r UserRepository) UpdateUser(u *model.User) error {
+	_, err := r.DB.Id(u.ID).Update(u)
+	if err != nil {
+		if strings.Index(strings.ToLower(err.Error()), "unique constraint") >= 0 {
+			return errors.DuplicatedUserError
+		}
+
+		return err
+	}
+	return nil
 }
 
 func addFilters(q *validator.UserListRequest, DB *xorm.Engine) *xorm.Session {

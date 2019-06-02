@@ -11,6 +11,8 @@ import (
 type Users interface {
 	ListUsers(q *validator.UserListRequest) (*model.UserList, error)
 	UpdateUser(id string, userCreation *validator.UserCreation) (*model.User, error)
+	CreateUser(userCreation *validator.UserCreation) (*model.User, error)
+	GetUser(id string) (*model.User, error)
 }
 
 // UserService struct
@@ -43,9 +45,20 @@ func (us UserService) UpdateUser(id string, userCreation *validator.UserCreation
 	user.ID = id
 
 	err := us.Repository.UpdateUser(user)
-	if err != nil {
-		return nil, err
-	}
 
-	return user, nil
+	return user, err
+}
+
+// CreateUser Cria um novo usuário
+func (us UserService) CreateUser(userCreation *validator.UserCreation) (*model.User, error) {
+	user := builder.UserCreationToUser(userCreation)
+
+	err := us.Repository.CreateUser(user)
+
+	return user, err
+}
+
+// GetUser consulta um usuário
+func (us UserService) GetUser(id string) (*model.User, error) {
+	return us.Repository.GetUser(id)
 }
