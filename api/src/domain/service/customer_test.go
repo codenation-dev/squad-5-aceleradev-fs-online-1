@@ -46,3 +46,40 @@ func TestCustomerService_read(t *testing.T) {
 	assert.Equal(t, c.Records, cl.Records)
 	assert.Equal(t, c.Data, cl.Data)
 }
+
+func TestCustomerService_read_AllDuplicatedCustomerError(t *testing.T) {
+	
+	mock := mockDBCustomer{customers:[]model.Customer{
+		{Name:"customer 1"},
+		{Name:"customer 2"},
+		{Name:"customer 3"},
+	}}
+	cs := CustomerService{mock}
+	_, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
+	
+	assert.NotNil(t, err)
+	assert.Equal(t, err, errors.AllDuplicatedCustomerError)
+}
+
+func TestCustomerService_read_ListDuplicatedCustomerError(t *testing.T) {
+	
+	mock := mockDBCustomer{customers:[]model.Customer{
+		{Name:"customer 1"},
+		{Name:"customer 2"},
+	}}
+	cs := CustomerService{mock}
+	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
+	
+	cl := model.CustomerList{
+		Records:1,
+		Data: []model.Customer{
+			{Name:"customer 3"},
+		},
+
+	}
+
+	assert.NotNil(t, err)
+	assert.Equal(t, err, errors.ListDuplicatedCustomerError)
+	assert.Equal(t, c.Records, cl.Records)
+	assert.Equal(t, c.Data, cl.Data)
+}

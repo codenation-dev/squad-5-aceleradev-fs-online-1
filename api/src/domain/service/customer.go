@@ -11,7 +11,7 @@ import (
 
 // Customer interface
 type Customer interface {
-	Parse(fileName string) (*model.CustomerList, error)
+	Parse(file multipart.File) (*model.CustomerList, error)
 	read(reader io.Reader) (*model.CustomerList, error)
 	createCustomer(customer *model.Customer) (*model.Customer, error)
 }
@@ -25,7 +25,6 @@ type CustomerService struct {
 func (cs CustomerService) Parse(file multipart.File) (*model.CustomerList, error) {
 
 	defer file.Close()
-
 	cl, err := cs.read(file)
 
 	if err != nil {
@@ -42,7 +41,7 @@ func (cs CustomerService) read(reader io.Reader) (*model.CustomerList, error) {
 
 	var errs []error
 	i := 0
-	for ; ; i++ {
+	for ; ;i++{
 		s, _, err := r.ReadLine()
 
 		if err != nil {
@@ -54,23 +53,13 @@ func (cs CustomerService) read(reader io.Reader) (*model.CustomerList, error) {
 
 		}
 
-		if len(s) == 0 {
-			continue
+		customer := model.Customer{Name: string(s)}
+		customerDB, err := cs.createCustomer(&customer)
+		if err != nil {
+			errs = append(errs, err)
 		} else {
-
-			customer := &model.Customer{Name: string(s)}
-
-			customer, err = cs.createCustomer(customer)
-	
-			if err != nil {
-				if err == errors.DuplicatedCustomerError {
-					errs = append(errs, err)
-				}
-			}
-			customers = append(customers, *customer)
+			customers = append(customers, *customerDB)
 		}
-
-
 	}
 
 	cl = &model.CustomerList{

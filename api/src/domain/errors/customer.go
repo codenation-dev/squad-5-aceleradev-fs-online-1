@@ -12,3 +12,6 @@ var AllDuplicatedCustomerError error = NewAPIValidationError(http.StatusBadReque
 
 // ListDuplicatedCustomerError erro quando alguns customers da lista já exitem
 var ListDuplicatedCustomerError error = NewAPIValidationError(http.StatusPartialContent, "Alguns Customer da lista já existem")
+
+// ContentTypeInvalidError erro quendo o aquivo de upload é invaludo
+var ContentTypeInvalidError error = NewAPIValidationError(http.StatusBadRequest, "Tipo invalido de arquivo.")

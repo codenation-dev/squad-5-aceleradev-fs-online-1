@@ -26,9 +26,15 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		Users: &userService,
 	}
 
-	var cs service.Customer
+	CustomerRepository := repository.CustomerRepository{
+		DB: db,
+	}
+
+	customerService := service.CustomerService{
+		Repository: &CustomerRepository,
+	}
 	cc := controller.CustomerController{
-		Customer: cs,
+		Customers: &customerService,
 	}
 
 	// Users

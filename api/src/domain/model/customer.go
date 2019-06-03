@@ -6,7 +6,7 @@ import (
 
 // Customer struct
 type Customer struct {
-	ID        string    `json:"-" xorm:"varchar(26) pk 'id'"`
+	ID        string    `json:"id,omitempty" xorm:"varchar(26) pk 'id'"`
 	Name      string    `json:"-" xorm:"varchar(25) notnull unique"`
 	Salary    float32   `json:"-" xorm:"descimal"`
 	CreatedAt time.Time `json:"-" xorm:"notnull created"`
