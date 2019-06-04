@@ -20,23 +20,27 @@ func (cc CustomerController) UploadCustomer(c *gin.Context) {
 
 	if err != nil {
 		errors.AbortWithError(c, &err)
+		return
 	}
 
 	if f.Header.Get("Content-Type") != "text/csv" {
 		errors.AbortWithError(c, &errors.ContentTypeInvalidError)
+		return
 	}
 
 	fo, err := f.Open()
 
 	if err != nil {
 		errors.AbortWithError(c, &err)
+		return
 	}
-	cl, err := cc.Customers.Parse(fo)
+	ci, err := cc.Customers.Parse(fo)
 
 	if err != nil {
 		errors.AbortWithError(c, &err)
+		return
 	}
 
-	c.JSON(http.StatusOK, cl)
+	c.JSON(http.StatusOK, ci)
 
 }

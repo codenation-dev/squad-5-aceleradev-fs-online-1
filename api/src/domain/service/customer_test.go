@@ -33,18 +33,13 @@ func TestCustomerService_read(t *testing.T) {
 	cs := CustomerService{mock}
 	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
 
-	cl := model.CustomerList{
-		Records:3,
-		Data: []model.Customer{
-			{Name:"customer 1"},
-		 	{Name:"customer 2"},
-			{Name:"customer 3"},
-		},
-
+	ci := model.CustomerInsert{
+		Success: 3,
 	}
+
 	assert.Nil(t, err)
-	assert.Equal(t, c.Records, cl.Records)
-	assert.Equal(t, c.Data, cl.Data)
+	assert.Equal(t, c.Success, ci.Success)
+
 }
 
 func TestCustomerService_read_AllDuplicatedCustomerError(t *testing.T) {
@@ -55,31 +50,34 @@ func TestCustomerService_read_AllDuplicatedCustomerError(t *testing.T) {
 		{Name:"customer 3"},
 	}}
 	cs := CustomerService{mock}
-	_, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
+	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
 	
+	ci := model.CustomerInsert{
+		AlreadyExist:3,
+	}
 	assert.NotNil(t, err)
 	assert.Equal(t, err, errors.AllDuplicatedCustomerError)
+	assert.Equal(t, c.AlreadyExist, ci.AlreadyExist)
+	assert.Equal(t, c.Success, ci.Success)
+
 }
 
 func TestCustomerService_read_ListDuplicatedCustomerError(t *testing.T) {
 	
 	mock := mockDBCustomer{customers:[]model.Customer{
 		{Name:"customer 1"},
-		{Name:"customer 2"},
 	}}
 	cs := CustomerService{mock}
 	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
-	
-	cl := model.CustomerList{
-		Records:1,
-		Data: []model.Customer{
-			{Name:"customer 3"},
-		},
 
+	ci := model.CustomerInsert{
+		Success: 2,
+		AlreadyExist: 1,
 	}
 
-	assert.NotNil(t, err)
-	assert.Equal(t, err, errors.ListDuplicatedCustomerError)
-	assert.Equal(t, c.Records, cl.Records)
-	assert.Equal(t, c.Data, cl.Data)
+	assert.Nil(t, err)
+	assert.Equal(t, c.Success, ci.Success)
+	assert.Equal(t, c.AlreadyExist, ci.AlreadyExist)
+
 }
+

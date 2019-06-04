@@ -1,6 +1,7 @@
 package service
 
 import (
+	"app/domain/builder"
 	"app/domain/errors"
 	"app/domain/model"
 	"app/resources/repository"
@@ -11,8 +12,8 @@ import (
 
 // Customer interface
 type Customer interface {
-	Parse(file multipart.File) (*model.CustomerList, error)
-	read(reader io.Reader) (*model.CustomerList, error)
+	Parse(file multipart.File) (*model.CustomerInsert, error)
+	read(reader io.Reader) (*model.CustomerInsert, error)
 	createCustomer(customer *model.Customer) (*model.Customer, error)
 }
 
@@ -22,7 +23,7 @@ type CustomerService struct {
 }
 
 // Parse recebe um nome de arquivo e retorna o seu conteudo
-func (cs CustomerService) Parse(file multipart.File) (*model.CustomerList, error) {
+func (cs CustomerService) Parse(file multipart.File) (*model.CustomerInsert, error) {
 
 	defer file.Close()
 	cl, err := cs.read(file)
@@ -33,27 +34,30 @@ func (cs CustomerService) Parse(file multipart.File) (*model.CustomerList, error
 	return cl, nil
 }
 
-func (cs CustomerService) read(reader io.Reader) (*model.CustomerList, error) {
+func (cs CustomerService) read(reader io.Reader) (*model.CustomerInsert, error) {
 
 	var customers []model.Customer
-	cl := &model.CustomerList{}
+	ci := &model.CustomerInsert{}
 	r := bufio.NewReader(reader)
 
 	var errs []error
 	i := 0
-	for ; ;i++{
+	for ; ; i++ {
 		s, _, err := r.ReadLine()
 
 		if err != nil {
 			if err == io.EOF {
 				break
 			} else {
-				return cl, err
+				return ci, err
 			}
 
 		}
 
-		customer := model.Customer{Name: string(s)}
+		customer := model.Customer{
+			Name: string(s),
+			ID:   builder.NewULID(),
+		}
 		customerDB, err := cs.createCustomer(&customer)
 		if err != nil {
 			errs = append(errs, err)
@@ -62,18 +66,13 @@ func (cs CustomerService) read(reader io.Reader) (*model.CustomerList, error) {
 		}
 	}
 
-	cl = &model.CustomerList{
-		Data:    customers,
-		Records: int64(len(customers)),
-	}
+	ci.Success = len(customers)
+	ci.AlreadyExist = len(errs)
 
-	if len(errs) == i {
-		return nil, errors.AllDuplicatedCustomerError
-	} else if len(errs) != i && len(errs) != 0 {
-		return cl, errors.ListDuplicatedCustomerError
+	if ci.Success == 0 {
+		return ci, errors.AllDuplicatedCustomerError
 	}
-
-	return cl, nil
+	return ci, nil
 }
 
 func (cs CustomerService) createCustomer(customer *model.Customer) (*model.Customer, error) {
