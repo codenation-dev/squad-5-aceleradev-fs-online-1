@@ -8,7 +8,7 @@ import (
 // UserCreationToUser converte UserCreation para User
 func UserCreationToUser(userCreation *validator.UserCreation) *model.User {
 	return &model.User{
-		ID:       newULID(),
+		ID:       NewULID(),
 		Username: userCreation.Username,
 		Password: userCreation.Password,
 		Name:     userCreation.Name,

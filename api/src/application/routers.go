@@ -26,11 +26,26 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		Users: &userService,
 	}
 
+	CustomerRepository := repository.CustomerRepository{
+		DB: db,
+	}
+
+	customerService := service.CustomerService{
+		Repository: &CustomerRepository,
+	}
+	cc := controller.CustomerController{
+		Customers: &customerService,
+	}
+
+	// Users
 	router.GET("/", Index)
 	router.POST("/users", uc.CreateUser)
 	router.GET("/users/:userId", uc.GetUser)
 	router.GET("/users", uc.ListUser)
 	router.PUT("/users/:userId", uc.UpdateUser)
+
+	// Customers
+	router.POST("/customers", cc.UploadCustomer)
 
 	return router
 }
