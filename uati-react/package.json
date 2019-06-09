@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "react": "16.8.6",
+    "react-csv-reader": "^1.2.2",
     "react-dom": "16.8.6",
     "react-router-dom": "^5.0.0",
     "react-scripts": "0.9.5"
