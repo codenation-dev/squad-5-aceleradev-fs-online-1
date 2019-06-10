@@ -10,7 +10,7 @@ import (
 
 // PublicAgents interface
 type PublicAgents interface {
-	StartProcess() error
+	StartProcess()
 }
 
 // PublicAgentService struct
@@ -62,6 +62,7 @@ func (us PublicAgentService) StartProcess() {
 
 func (us PublicAgentService) processChannel(c *chan []string) {
 	for line := range *c {
-		us.Repository.CreateOrUpdatePublicAgent(line)
+		publicAgent := builder.PublicAgentFrom(&line)
+		us.Repository.CreateOrUpdatePublicAgent(publicAgent)
 	}
 }

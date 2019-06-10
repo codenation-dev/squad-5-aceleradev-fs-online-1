@@ -37,6 +37,14 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		Customers: &customerService,
 	}
 
+	publicAgentRepository := repository.PublicAgentRepository{
+		DB: db,
+	}
+
+	publicAgentService := service.PublicAgentService{
+		Repository: &publicAgentRepository,
+	}
+
 	// Users
 	router.GET("/", Index)
 	router.POST("/users", uc.CreateUser)
