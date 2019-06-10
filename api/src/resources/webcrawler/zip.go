@@ -8,11 +8,13 @@ import (
 
 // UnzipFile descompacta o arquivo zip
 func UnzipFile(nome string) (*[]byte, error) {
+	log.Println("UnzipFile Begin")
 	rzip, err := zip.OpenReader(nome)
 	if err != nil {
 		return nil, err
 	}
 	defer rzip.Close()
+	defer log.Println("UnzipFile End")
 
 	for _, f := range rzip.File {
 		log.Println(f.Name)
@@ -35,5 +37,5 @@ func UnzipFile(nome string) (*[]byte, error) {
 		return &content, nil
 	}
 
-	return nil, nil
+	return nil, err
 }

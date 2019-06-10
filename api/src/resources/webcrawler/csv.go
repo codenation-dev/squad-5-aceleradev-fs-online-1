@@ -4,15 +4,19 @@ import (
 	"bytes"
 	"encoding/csv"
 	"io"
+	"log"
 )
 
 // CsvReader le o csv e envia para os channels
-func CsvReader(body *[]byte, channels *[]chan []string, errOutput *chan error) {
+func CsvReader(body *[]byte, channels *[]chan []string, errOutput chan error) {
+	log.Println("CsvReader Begin")
 	defer func() {
+		log.Println("CsvReader Defer")
 		for _, c := range *channels {
 			close(c)
 		}
-		close(*errOutput)
+		close(errOutput)
+		log.Println("CsvReader End")
 	}()
 
 	br := bytes.NewReader(*body)
@@ -21,9 +25,12 @@ func CsvReader(body *[]byte, channels *[]chan []string, errOutput *chan error) {
 	r.Comma = ';'
 
 	size := len(*channels)
+	log.Printf("CsvReader Channels = %v\n", size)
 	pos := 0
 
-	//for index := 0; index < 10; index++ {
+	r.Read() // pula a primeira linha
+
+	// for index := 0; index < 10; index++ {
 
 	for {
 		record, err := r.Read()
@@ -31,7 +38,8 @@ func CsvReader(body *[]byte, channels *[]chan []string, errOutput *chan error) {
 			break
 		}
 		if err != nil {
-			*errOutput <- err
+			log.Printf("CsvReader Error = %v\n", err)
+			errOutput <- err
 			return
 		}
 
@@ -44,5 +52,6 @@ func CsvReader(body *[]byte, channels *[]chan []string, errOutput *chan error) {
 		}
 	}
 
-	*errOutput <- nil
+	log.Println("CsvReader Ending")
+	errOutput <- nil
 }

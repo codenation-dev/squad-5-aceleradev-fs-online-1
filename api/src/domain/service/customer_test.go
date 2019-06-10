@@ -2,21 +2,20 @@ package service
 
 import (
 	"app/domain/errors"
+	"app/domain/model"
 	"fmt"
 	"github.com/stretchr/testify/assert"
-	"app/domain/model"
 	"strings"
 	"testing"
-
 )
 
 type mockDBCustomer struct {
-	customers  []model.Customer
-	err   error
-	count int64
+	customers []model.Customer
+	err       error
+	count     int64
 }
 
-func (mk mockDBCustomer) CreateCustomer(custumer *model.Customer) error{
+func (mk mockDBCustomer) CreateCustomer(custumer *model.Customer) error {
 
 	for _, c := range mk.customers {
 		if c.Name == custumer.Name {
@@ -28,7 +27,7 @@ func (mk mockDBCustomer) CreateCustomer(custumer *model.Customer) error{
 }
 
 func TestCustomerService_read(t *testing.T) {
-	
+
 	mock := mockDBCustomer{}
 	cs := CustomerService{mock}
 	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
@@ -43,17 +42,17 @@ func TestCustomerService_read(t *testing.T) {
 }
 
 func TestCustomerService_read_AllDuplicatedCustomerError(t *testing.T) {
-	
-	mock := mockDBCustomer{customers:[]model.Customer{
-		{Name:"customer 1"},
-		{Name:"customer 2"},
-		{Name:"customer 3"},
+
+	mock := mockDBCustomer{customers: []model.Customer{
+		{Name: "customer 1"},
+		{Name: "customer 2"},
+		{Name: "customer 3"},
 	}}
 	cs := CustomerService{mock}
 	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
-	
+
 	ci := model.CustomerInsert{
-		AlreadyExist:3,
+		AlreadyExist: 3,
 	}
 	assert.NotNil(t, err)
 	assert.Equal(t, err, errors.AllDuplicatedCustomerError)
@@ -63,15 +62,15 @@ func TestCustomerService_read_AllDuplicatedCustomerError(t *testing.T) {
 }
 
 func TestCustomerService_read_ListDuplicatedCustomerError(t *testing.T) {
-	
-	mock := mockDBCustomer{customers:[]model.Customer{
-		{Name:"customer 1"},
+
+	mock := mockDBCustomer{customers: []model.Customer{
+		{Name: "customer 1"},
 	}}
 	cs := CustomerService{mock}
 	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
 
 	ci := model.CustomerInsert{
-		Success: 2,
+		Success:      2,
 		AlreadyExist: 1,
 	}
 
@@ -80,4 +79,3 @@ func TestCustomerService_read_ListDuplicatedCustomerError(t *testing.T) {
 	assert.Equal(t, c.AlreadyExist, ci.AlreadyExist)
 
 }
-

@@ -19,10 +19,11 @@ type PublicAgentService struct {
 }
 
 const urlPublicAgent string = "http://www.transparencia.sp.gov.br/PortalTransparencia-Report/Remuneracao.aspx"
-const maxConsumers int = 4
+const maxConsumers int = 8
 
 // StartProcess inicia o processo de webcrawler
 func (us PublicAgentService) StartProcess() {
+	log.Println("StartProcess Begin")
 	filename := "./temp" + builder.NewULID() + ".zip"
 
 	f, err := os.Create(filename)
@@ -53,16 +54,39 @@ func (us PublicAgentService) StartProcess() {
 
 	errChannel := make(chan error)
 
-	go webcrawler.CsvReader(content, &channels, &errChannel)
+	go webcrawler.CsvReader(content, &channels, errChannel)
 
-	for _, c := range channels {
-		go us.processChannel(&c)
+	p := make([]chan bool, 0)
+
+	for pos, c := range channels {
+		done := make(chan bool)
+		p = append(p, done)
+		go us.processChannel(pos, c, done)
 	}
+
+	err = <-errChannel
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, done := range p {
+		<-done
+	}
+
+	log.Println("StartProcess End")
 }
 
-func (us PublicAgentService) processChannel(c *chan []string) {
-	for line := range *c {
+func (us PublicAgentService) processChannel(pos int, c chan []string, done chan bool) {
+	log.Printf("processChannel Begin %v\n", pos)
+	for line := range c {
 		publicAgent := builder.PublicAgentFrom(&line)
-		us.Repository.CreateOrUpdatePublicAgent(publicAgent)
+		err := us.Repository.CreateOrUpdatePublicAgent(publicAgent)
+		if err != nil {
+			log.Printf("processChannel %#v\n", publicAgent)
+			log.Println("processChannel Error", err)
+		}
 	}
+	log.Printf("processChannel End %v\n", pos)
+	done <- true
 }

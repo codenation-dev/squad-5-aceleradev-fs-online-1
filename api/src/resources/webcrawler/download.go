@@ -3,6 +3,7 @@ package webcrawler
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	neturl "net/url"
 	"os"
@@ -21,13 +22,20 @@ func (wc *writeCounter) Write(p []byte) (int, error) {
 	return n, nil
 }
 
+var msg string
+
 func (wc writeCounter) printProgress() {
-	//fmt.Printf("\r%s", strings.Repeat(" ", 35))
-	fmt.Printf("\rDownloading... %s complete", humanize.Bytes(wc.Total))
+	m := fmt.Sprintf("Downloading... %s complete", humanize.Bytes(wc.Total))
+	if m != msg {
+		msg = m
+		log.Println(m)
+	}
+
 }
 
 // DownloadPublicAgentsList faz o Download do arquivo zip com a lista de funcionários publicos de são paulo
 func DownloadPublicAgentsList(url string, f *os.File) error {
+	log.Println("DownloadPublicAgentsList Begin")
 	v := neturl.Values{}
 	v.Set("__EVENTTARGET", "")
 	v.Set("__EVENTARGUMENT", "")
@@ -60,5 +68,6 @@ func DownloadPublicAgentsList(url string, f *os.File) error {
 		return err
 	}
 
+	log.Println("DownloadPublicAgentsList End")
 	return nil
 }

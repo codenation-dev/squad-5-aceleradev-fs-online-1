@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"github.com/stretchr/testify/assert"
-	"app/domain/model"
 	"app/domain/errors"
+	"app/domain/model"
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/go-xorm/xorm"
@@ -28,7 +28,7 @@ func TestCustomerRepository_CreateCustomer(t *testing.T) {
 	defer uRepo.DB.Close()
 
 	newCustomer := model.Customer{
-		ID: "1111",
+		ID:   "1111",
 		Name: "test",
 	}
 
@@ -50,7 +50,7 @@ func TestCustomerRepository_CreateCustomer_DuplicatedCustomer(t *testing.T) {
 	defer uRepo.DB.Close()
 
 	newCustomer := model.Customer{
-		ID: "1111",
+		ID:   "1111",
 		Name: "test",
 	}
 
