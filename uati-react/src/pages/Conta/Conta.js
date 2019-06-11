@@ -5,13 +5,7 @@ import Legenda from '../../componentes/Legenda/Legenda'
 import Campo from '../../componentes/Campo/Campo'
 import './Conta.css'
 
-/*
-1) O componente pode mudar de estado? Sim // class
-2) O que muda? setState({ desabilitado: false }) ou  // setState({ desabilitado: true })
-3) Qual o estado inicial? state = { desabilitado: false } // constructor
-4) O que faz ele mudar?
-// function onChange pra verificar se todos os campos estão corretos (não têm erro)
-*/
+
 class Conta extends Component {
   constructor(props) {
     super(props)
