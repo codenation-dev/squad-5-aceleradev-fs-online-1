@@ -3,9 +3,9 @@
   box-sizing: border-box;
   display: block;
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.7rem;
   margin: 0 0 1rem;
-  border: 1px solid black;
+  border: 1px solid #2A8077;
   border-radius: 5px;
 }
 

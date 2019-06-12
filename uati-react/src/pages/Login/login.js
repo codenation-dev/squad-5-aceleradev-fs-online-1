@@ -45,9 +45,9 @@ class Login extends Component {
   render() {
     return (
       <main className="login">
-      
+        <div className="form">      
         <h1>Login</h1>
-        <p>Entre com seu email e senha.</p>
+        {/* <p>Entre com seu email e senha.</p> */}
         
         <form onSubmit={this.enviaDados}>
           <Legenda htmlFor="email">Email:</Legenda>
@@ -62,6 +62,7 @@ class Login extends Component {
         </form>
 
         <Link url="/conta">Criar uma conta</Link>
+        </div>
       </main>
     )
   }

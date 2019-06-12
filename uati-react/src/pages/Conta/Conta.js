@@ -33,9 +33,10 @@ class Conta extends Component {
 
   render() {
     return (
-      <main className="conta">
-        <h1>Conta</h1>
-        <p>Envie o formulário para criar uma conta!</p>
+      <main>
+      <div className="form">
+        <h1>Cadastro</h1>
+        {/* <p>Envie o formulário para criar uma conta!</p> */}
         
         <Legenda htmlFor="nome">Nome:</Legenda>
         <Campo ref={this.nomeRef} id="nome" type="text" name="nome" placeholder="Nome" required minLength={10} onChange={this.habilitaOuDesabilita} />
@@ -52,6 +53,7 @@ class Conta extends Component {
         <Botao desabilitado={this.state.desabilitado}>Enviar</Botao>
   
         <Link url="/login">Fazer login</Link>
+        </div>
       </main>
     )
   }
