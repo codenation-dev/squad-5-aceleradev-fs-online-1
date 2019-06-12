@@ -33,7 +33,6 @@ func (us PublicAgentService) StartProcess() {
 	}
 	defer func() {
 		f.Close()
-		os.Remove(filename)
 	}()
 	err = webcrawler.DownloadPublicAgentsList(urlPublicAgent, f)
 	if err != nil {
@@ -46,6 +45,8 @@ func (us PublicAgentService) StartProcess() {
 		log.Println(err)
 		return
 	}
+
+	webcrawler.StoreFile(filename)
 
 	channels := make([]chan []string, 0)
 	for i := 0; i < maxConsumers; i++ {
