@@ -36,6 +36,18 @@ services:
       POSTGRES_DB: bancouat
       POSTGRES_USER: bancouat
       POSTGRES_PASSWORD: bancouat
+  static:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    links:
+      - app
+    environment:
+      - NGINX_PORT=80
   # migrate:
   #   image: migrate/migrate
   #   container_name: migrate
