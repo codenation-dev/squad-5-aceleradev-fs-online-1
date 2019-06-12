@@ -3,6 +3,7 @@ package application
 import (
 	"app/domain/service"
 	"app/resources/repository"
+	"log"
 	"net/http"
 
 	"app/application/controller"
@@ -14,6 +15,8 @@ import (
 // NewRouter retorna um novo router.
 func NewRouter(db *xorm.Engine) *gin.Engine {
 	router := gin.Default()
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	log.SetOutput(gin.DefaultWriter)
 
 	userRepository := repository.UserRepository{
 		DB: db,
@@ -37,6 +40,18 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		Customers: &customerService,
 	}
 
+	publicAgentRepository := repository.PublicAgentRepository{
+		DB: db,
+	}
+
+	publicAgentService := service.PublicAgentService{
+		Repository: &publicAgentRepository,
+	}
+
+	pac := controller.PublicAgentController{
+		PublicAgents: &publicAgentService,
+	}
+
 	// Users
 	router.GET("/", Index)
 	router.POST("/users", uc.CreateUser)
@@ -46,6 +61,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Customers
 	router.POST("/customers", cc.UploadCustomer)
+
+	// Public Agents
+	router.GET("/webcrawler", pac.StartProcess)
 
 	return router
 }
