@@ -11,8 +11,6 @@ services:
       - "5000:5000"
     volumes: 
       - ./api/src:/go/src/app
-    links:
-      - db:db-dev
   swagger-ui:
     image: swaggerapi/swagger-ui
     restart: always
@@ -39,7 +37,7 @@ services:
   static:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: nginx/Dockerfile
     ports:
       - "80:80"
     depends_on:
