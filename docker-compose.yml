@@ -16,7 +16,7 @@ services:
     restart: always
     container_name: "swagger-ui"
     ports:
-      - "8082:8080"
+      - "8080:8080"
     volumes:
       - ./doc/swagger.yaml:/swagger.yaml
     environment:
