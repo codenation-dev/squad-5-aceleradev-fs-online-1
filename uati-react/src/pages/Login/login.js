@@ -1,54 +1,71 @@
-import React from 'react';
-//import TextField from '@material-ui/core/TextField';
-//import PropTypes from 'prop-types';
-//import { withStyles } from '@material-ui/core/styles';
-//import Button from '@material-ui/core/Button';
-import Button from '../../components/Button/Button';
+import React, { Component } from 'react'
+import Link from '../../componentes/Link/Link'
+import Botao from '../../componentes/Botao/Botao'
+import Legenda from '../../componentes/Legenda/Legenda'
+import Campo from '../../componentes/Campo/Campo'
+import './Login.css'
 
+class Login extends Component {
+  constructor(props) {
+    super(props)
 
-import './login.css'
+    this.emailRef = React.createRef() // { current: null }
+    this.senhaRef = React.createRef()
+    
+    this.state = { desabilitado: true }
+  }
 
+  enviaDados = (evento) => {
+    evento.preventDefault()
 
-export default class Login extends React.Component {
-    render() {
-        return (
-            <div className="LoginContainer">
-                <div className="LoginBox">
-                    <div className="Fields">
-                        <center>
-                            <h1 className="LoginTitle">Login</h1>
-                            {/* <TextField
-                                id="standard-with-placeholder"
-                                label="Username"
-                                placeholder="userName"
-                                style={{ width: '70%' }}
-                                margin="normal"
-                            />
-                            <br></br>
-                            <TextField
-                                id="outlined-password-input"
-                                label="Password"
-                                type="password"
-                                autoComplete="current-password"
-                                style={{ width: '70%' }}
-                                margin="normal"
-                            /> */}
-                        </center>
-                    </div>
-                    <div className="Buttons">
-                        <center>
-                            <Button> Enter </Button>
-                            <Button> Cirela </Button>
-                            {/* <Button variant="contained" color="primary" >Enter</Button>
-                            <Button variant="contained" color="primary" style={{ marginLeft: 10 }} >
-                                register</Button> */}
-                        </center>
-                    </div>
+    const campoEmail = this.emailRef.current
+    const campoSenha = this.senhaRef.current
 
-                </div>
-            </div>
-
-        );
+    const dados = {
+      email: campoEmail.getValor(),
+      senha: campoSenha.getValor()
     }
 
-} 
+    this.props.logaUsuario(dados)
+
+    this.props.history.push('/')
+  }
+
+  habilitaOuDesabilitaBotao = () => {
+    const campoEmail = this.emailRef.current
+    const campoSenha = this.senhaRef.current
+
+    if (campoEmail.temErro() || campoSenha.temErro()) {
+      this.setState({ desabilitado: true })
+    } else {
+      this.setState({ desabilitado: false })
+    }
+  }
+
+  render() {
+    return (
+      <main className="login">
+        <div className="form">      
+        <h1>Login</h1>
+        {/* <p>Entre com seu email e senha.</p> */}
+        
+        <form onSubmit={this.enviaDados}>
+          <Legenda htmlFor="email">Email:</Legenda>
+          <Campo ref={this.emailRef} id="email" type="email" name="email" placeholder="Email" required onChange={this.habilitaOuDesabilitaBotao} />
+          
+          <Legenda htmlFor="senha">Senha:</Legenda>
+          <Campo ref={this.senhaRef} id="senha" type="password" name="senha" placeholder="Senha" required minLength={6} onChange={this.habilitaOuDesabilitaBotao} />
+          
+          <Botao desabilitado={this.state.desabilitado}>
+            Enviar
+          </Botao>
+        </form>
+
+        <Link url="/conta">Criar uma conta</Link>
+        </div>
+      </main>
+    )
+  }
+}
+
+export default Login

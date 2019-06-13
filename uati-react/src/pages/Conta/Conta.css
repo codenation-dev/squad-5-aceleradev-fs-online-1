@@ -1,0 +1,29 @@
+.conta {
+  padding: 0.75rem 1rem 0;
+}
+
+.form {
+  background-color: white;
+  box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+  padding: 0.75rem 1rem; 
+  margin: 1% auto;
+  width: 30%;  
+}
+
+@media (min-width: 768px) {
+  .conta {
+      padding: 1.5rem 20% 0;
+  }
+
+  .form {
+    padding: 1.8rem 10%;
+}
+}
+
+@media (min-width: 992px) {
+  .conta {
+      padding: 2.25rem 30% 0;
+  }
+}
+
+
