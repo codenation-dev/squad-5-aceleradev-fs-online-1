@@ -3,6 +3,7 @@ package application
 import (
 	"app/domain/service"
 	"app/resources/repository"
+	"app/resources/sendemail"
 	"log"
 	"net/http"
 
@@ -52,6 +53,10 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		PublicAgents: &publicAgentService,
 	}
 
+	ce := sendemail.ClientEmail{}
+	se := service.EmailService{ce}
+	ec := controller.EmailController{se}
+
 	// Users
 	router.GET("/", Index)
 	router.POST("/users", uc.CreateUser)
@@ -64,6 +69,8 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Public Agents
 	router.GET("/webcrawler", pac.StartProcess)
+
+	router.GET("/email", ec.Send)
 
 	return router
 }
