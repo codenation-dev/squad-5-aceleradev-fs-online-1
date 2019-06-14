@@ -10,7 +10,8 @@ externalDocs:
   description: Aplicação Banco UATI
   url: http://localhost:8000
 servers:
-- url: http://localhost:8000
+- url: http://bancouati.ga/api
+- url: http://localhost:5000
 tags:
 - name: Security
   description: Controle de acesso
