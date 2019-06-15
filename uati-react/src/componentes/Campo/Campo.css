@@ -1,0 +1,20 @@
+.campo {
+  font-size: 1rem;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  margin: 0 0 1rem;
+  border: 1px solid #2A8077;
+  border-radius: 5px;
+}
+
+.campo:focus {
+  outline: none;
+  border-color: #2A8077;
+  box-shadow: 0 0 10px #2A8077;
+}
+
+.campo__erro {
+  color: red;
+}

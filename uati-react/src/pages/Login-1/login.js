@@ -14,10 +14,11 @@ export default class Login extends React.Component {
         return (
             <div className="LoginContainer">
                 <div className="LoginBox">
-                    <div className="Fields">
-                        <center>
-                            <h1 className="LoginTitle">Login</h1>
-                            {/* <TextField
+                    {/* <div className="LoginBox-image"> */}
+                        <div className="Fields">
+                            <center>
+                                <h1 className="LoginTitle">Login</h1>
+                                {/* <TextField
                                 id="standard-with-placeholder"
                                 label="Username"
                                 placeholder="userName"
@@ -33,18 +34,18 @@ export default class Login extends React.Component {
                                 style={{ width: '70%' }}
                                 margin="normal"
                             /> */}
-                        </center>
-                    </div>
-                    <div className="Buttons">
-                        <center>
-                            <Button> Enter </Button>
-                            <Button> Cirela </Button>
-                            {/* <Button variant="contained" color="primary" >Enter</Button>
+                            </center>
+                        </div>
+                        <div className="Buttons">
+                            <center>
+                                <Button> Enter </Button>
+                                {/* <Button> Cirela </Button> */}
+                                {/* <Button variant="contained" color="primary" >Enter</Button>
                             <Button variant="contained" color="primary" style={{ marginLeft: 10 }} >
                                 register</Button> */}
-                        </center>
-                    </div>
-
+                            </center>
+                        </div>
+                    {/* </div> */}
                 </div>
             </div>
 

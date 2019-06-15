@@ -44,3 +44,10 @@ A lista de clientes do banco Uati encontra-se no arquivo ``clientes.csv`` contid
   - go test ./...
 - Rodar os testes unitários com o relatório do cobertura
   - go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
+
+## Servidor de desenvolvimento
+- Frontend http://bancouati.ga/
+  - Exemplo: http://bancouati.ga/dashboard
+- Backend http://bancouati.ga/api/
+  - Exemplo GET http://bancouati.ga/api/users
+- Swagger http://bancouati.ga/docs/

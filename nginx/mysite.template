@@ -1,0 +1,32 @@
+server {
+
+    root /data/www; 
+
+    location ~ ^/api/(.*)$  {
+      resolver 127.0.0.11 valid=5s ipv6=off;
+      proxy_pass http://app:5000/$1?$args;
+      proxy_pass_request_headers on;
+
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_read_timeout 180s;
+      proxy_connect_timeout 180s;
+    }  
+
+    location ~ ^/docs/(.*)$  {
+      resolver 127.0.0.11 valid=5s ipv6=off;
+      proxy_pass http://swagger-ui:8080/$1?$args;
+      proxy_pass_request_headers on;
+
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_read_timeout 180s;
+      proxy_connect_timeout 180s;
+    }    
+
+    location ~ ^/(.*)$  {
+      index index.html;
+      try_files $uri $uri/ /index.html;
+    }
+
+}

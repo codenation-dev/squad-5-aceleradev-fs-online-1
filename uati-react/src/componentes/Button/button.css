@@ -1,0 +1,15 @@
+.button-login {
+    width: 100%;
+<<<<<<< HEAD:uati-react/src/components/Button/button.css
+    background-color: #43CCBE;
+    height: 50px;
+    margin: 10px;
+    border-radius: 15px;
+=======
+    background-color: #2A8077;
+    height: 40px;
+    margin: 5px;
+    border-radius: 10px;
+>>>>>>> 215a9d6d2ee1c0606d7802d228d94759ea959e53:uati-react/src/componentes/Button/button.css
+    border: 0;
+}

@@ -11,16 +11,16 @@ import (
 func RunMigrations(db *xorm.Engine) {
 	log.Println("Migrations starting")
 
-	err := db.Sync(new(model.User))
-	if err != nil {
-		log.Println("Migrations error: ", err)
-		panic(err)
-	}
-
-	err = db.Sync(new(model.Customer))
+	err := db.Sync(
+		new(model.User),
+		new(model.Customer),
+		new(model.PublicAgent),
+	)
 
 	if err != nil {
 		log.Println("Migrations error: ", err)
 		panic(err)
 	}
+
+	log.Println("Migrations success")
 }

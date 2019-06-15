@@ -13,8 +13,16 @@ func TestGetEnv(t *testing.T) {
 	assert.Equal(t, "TEST", got)
 }
 
-func TestGetEnvDefault(t *testing.T) {
+func TestGetEnv_Default(t *testing.T) {
 	os.Clearenv()
 	got := GetEnv("VAR_OK", "OK")
 	assert.Equal(t, "OK", got)
+}
+
+func TestGetEnv_Error(t *testing.T) {
+	os.Clearenv()
+
+	assert.Panics(t, func() {
+		GetEnv("VAR_OK")
+	})
 }

@@ -1,12 +1,20 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+)
 
 // GetEnv recupera varivel de ambiente
-func GetEnv(key string, defaultVal string) string {
-	if value, exists := os.LookupEnv(key); exists {
+func GetEnv(key ...string) string {
+	if value, exists := os.LookupEnv(key[0]); exists {
 		return value
 	}
 
-	return defaultVal
+	if len(key) <= 1 {
+		log.Printf("Variavel de ambiente '%s' não foi definida e não tem valor padrão\n", key[0])
+		panic(1)
+	}
+
+	return key[1]
 }
