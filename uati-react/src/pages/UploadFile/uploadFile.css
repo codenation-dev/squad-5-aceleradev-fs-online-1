@@ -10,15 +10,24 @@
 .csv-input {
     padding: 10px;
     display: block;
-    margin: 15px auto;
+    margin: 1px auto;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
 
   .UploadFileTitle{
-    margin-top: 30%;
+    margin-top: 10%;
     font-size: 20px;
     font-family: Roboto,"Helvetica Neue",sans-serif;
   }
+
+  .DropFile{
+    margin-top: 40%;
+    font-size: 12px;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+  }
+
+  
+  
 
  
