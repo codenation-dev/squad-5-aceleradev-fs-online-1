@@ -36,7 +36,7 @@ func (e EmailService) Send(email model.Email) error {
 	}
 	defer w.Close()
 
-	_, err = w.Write([]byte("Subject:Olá!\n\n Olá Fulano. Tudo de bom com Go!"))
+	_, err = w.Write([]byte("Subject:" + email.Subject + "\n\n" + email.Body))
 	if err != nil {
 		return err
 	}
