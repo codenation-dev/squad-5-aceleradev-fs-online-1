@@ -52,6 +52,16 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		PublicAgents: &publicAgentService,
 	}
 
+	alertRepository := repository.AlertRepository{
+		DB: db,
+	}
+	alertService := service.AlertService{
+		Repository: &alertRepository,
+	}
+	ac := controller.AlertController{
+		Alerts: &alertService,
+	}
+
 	// Users
 	router.GET("/", Index)
 	router.POST("/users", uc.CreateUser)
@@ -64,6 +74,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Public Agents
 	router.GET("/webcrawler", pac.StartProcess)
+
+	// Alerts
+	router.GET("/alerts/:id", ac.GetAlert)
 
 	return router
 }
