@@ -77,6 +77,7 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Alerts
 	router.GET("/alerts/:id", ac.GetAlert)
+	router.GET("/alerts", ac.ListAlerts)
 
 	return router
 }

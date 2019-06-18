@@ -22,3 +22,9 @@ type AlertUser struct {
 	User  User  `json:"user" xorm:"user_id varchar(26) pk notnull"`
 	Alert Alert `json:"alert" xorm:"alert_id varchar(26) pk notnull"`
 }
+
+// AlertList struct
+type AlertList struct {
+	Records int64   `json:"records,omitempty"`
+	Data    []Alert `json:"data,omitempty"`
+}

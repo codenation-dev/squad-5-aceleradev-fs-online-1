@@ -34,3 +34,21 @@ func (ac AlertController) GetAlert(c *gin.Context) {
 	}
 
 }
+
+// ListAlerts Lista os alertas
+func (ac AlertController) ListAlerts(c *gin.Context) {
+	var q validator.AlertListRequest
+	if err := c.ShouldBindQuery(&q); err != nil {
+		validator.AbortWithValidation(c, &err)
+		return
+	}
+
+	alerts, err := ac.Alerts.ListAlerts(&q)
+
+	if err != nil {
+		errors.AbortWithError(c, &err)
+	} else {
+		c.JSON(http.StatusOK, alerts)
+	}
+
+}
