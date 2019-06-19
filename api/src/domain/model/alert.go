@@ -25,6 +25,14 @@ type AlertUser struct {
 
 // AlertList struct
 type AlertList struct {
-	Records int64   `json:"records,omitempty"`
-	Data    []Alert `json:"data,omitempty"`
+	Records int64       `json:"records,omitempty"`
+	Data    []AlertItem `json:"data,omitempty"`
+}
+
+// AlertItem struct
+type AlertItem struct {
+	ID           string    `json:"id,omitempty" xorm:"varchar(26) pk 'id'"`
+	Type         AlertType `json:"type" xorm:"int notnull"`
+	CustomerName string    `json:"customer_name,omitempty" xorm:"customer_name varchar(26) index null"`
+	CreatedAt    time.Time `json:"datetime" xorm:"notnull created"`
 }

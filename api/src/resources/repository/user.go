@@ -4,7 +4,6 @@ import (
 	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
-	"fmt"
 	"strings"
 
 	"github.com/go-xorm/xorm"
@@ -53,7 +52,6 @@ func (r UserRepository) ListUser(q *validator.UserListRequest) (*[]model.User, e
 	if q.Limit == 0 {
 		q.Limit = 20
 	}
-	fmt.Printf("\n%#v\n", *q)
 
 	if err := addFilters(q, r.DB).Limit(q.Limit, q.Offset).Find(&users); err != nil {
 		return nil, err
