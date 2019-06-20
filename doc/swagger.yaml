@@ -427,11 +427,21 @@ components:
       properties:
         id:
           type: string
+        name: 
+          type: string
+        salary:
+          type: number
+          format: float
+    PublicAgent:
+      type: object
+      properties:
+        id:
+          type: string
+        name: 
+          type: string
         occupation:
           type: string
         department:
-          type: string
-        name: 
           type: string
         salary:
           type: number
@@ -447,6 +457,8 @@ components:
           type: string
         customer:
           $ref: '#/components/schemas/Customer'
+        public_agent:
+          $ref: '#/components/schemas/PublicAgent'
         user:
           $ref: '#/components/schemas/User'
         users_received:
