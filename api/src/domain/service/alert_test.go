@@ -2,6 +2,7 @@ package service
 
 import (
 	"app/domain/model"
+	"app/domain/validator"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,10 +11,20 @@ import (
 type mockDBAlert struct {
 	alert *model.Alert
 	err   error
+	list  []model.AlertItem
+	count int64
 }
 
 func (m mockDBAlert) GetAlert(id string) (*model.Alert, error) {
 	return m.alert, m.err
+}
+
+func (m mockDBAlert) ListAlerts(q *validator.AlertListRequest) ([]model.AlertItem, error) {
+	return m.list, m.err
+}
+
+func (m mockDBAlert) CountAlerts(q *validator.AlertListRequest) (int64, error) {
+	return m.count, m.err
 }
 
 func TestAlertService_GetAlert(t *testing.T) {

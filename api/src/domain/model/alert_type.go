@@ -3,6 +3,7 @@ package model
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // AlertType Enum
@@ -52,4 +53,20 @@ func (a *AlertType) UnmarshalJSON(b []byte) error {
 
 	*a = toID[j]
 	return nil
+}
+
+// AlertTypeFromString converte string para AlertType
+func AlertTypeFromString(v string) (*AlertType, error) {
+	a := AlertType(-1)
+	buffer := bytes.NewBufferString(`"`)
+	buffer.WriteString(v)
+	buffer.WriteString(`"`)
+	err := a.UnmarshalJSON(buffer.Bytes())
+	if err != nil {
+		return nil, err
+	}
+	if a <= 0 {
+		return nil, fmt.Errorf(`Invalid AlertType "%s"`, v)
+	}
+	return &a, nil
 }

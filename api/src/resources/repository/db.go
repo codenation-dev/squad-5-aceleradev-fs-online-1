@@ -20,7 +20,7 @@ func NewConnection() *xorm.Engine {
 		panic(err)
 	}
 
-	db.ShowSQL(true)
+	db.ShowSQL(false)
 
 	err = db.Ping()
 	if err != nil {

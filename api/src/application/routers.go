@@ -2,6 +2,7 @@ package application
 
 import (
 	"app/domain/service"
+	customValidator "app/domain/validator"
 	"app/resources/repository"
 	"log"
 	"net/http"
@@ -9,12 +10,19 @@ import (
 	"app/application/controller"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-xorm/xorm"
+	"gopkg.in/go-playground/validator.v8"
 )
 
 // NewRouter retorna um novo router.
 func NewRouter(db *xorm.Engine) *gin.Engine {
 	router := gin.Default()
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("alerttype", customValidator.AlertTypeValidator)
+	}
+
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	log.SetOutput(gin.DefaultWriter)
 

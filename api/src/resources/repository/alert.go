@@ -3,7 +3,6 @@ package repository
 import (
 	"app/domain/model"
 	"app/domain/validator"
-	"fmt"
 	"time"
 
 	"github.com/go-xorm/xorm"
@@ -65,14 +64,11 @@ func (r AlertRepository) ListAlerts(q *validator.AlertListRequest) ([]model.Aler
 		q.Limit = 20
 	}
 
-	fmt.Printf("\n%#v\n", *q)
-
-	query := r.DB.Table([]string{"alert", "a"}).
+	if err := addAlertFilters(q, r.DB).
 		Select("a.id, a.type, c.name customer_name,a.created_at").
-		Join("LEFT", []string{"customer", "c"}, "a.customer_id = c.id").
-		Join("LEFT", []string{"\"user\"", "u"}, "a.user_id = u.id")
+		Limit(q.Limit, q.Offset).
+		Find(&alerts); err != nil {
 
-	if err := addAlertFilters(q, query).Limit(q.Limit, q.Offset).Find(&alerts); err != nil {
 		return nil, err
 	}
 
@@ -81,11 +77,19 @@ func (r AlertRepository) ListAlerts(q *validator.AlertListRequest) ([]model.Aler
 
 // CountAlerts conta a quantidade de registros
 func (r AlertRepository) CountAlerts(q *validator.AlertListRequest) (int64, error) {
-	return 0, nil
+	total, err := addAlertFilters(q, r.DB).Count()
+	if err != nil {
+		return 0, err
+	}
+
+	return total, nil
 }
 
-func addAlertFilters(q *validator.AlertListRequest, DB *xorm.Session) *xorm.Session {
-	s := DB.NoCache()
+func addAlertFilters(q *validator.AlertListRequest, DB *xorm.Engine) *xorm.Session {
+	s := DB.Table([]string{"alert", "a"}).
+		Join("LEFT", []string{"customer", "c"}, "a.customer_id = c.id").
+		Join("LEFT", []string{"\"user\"", "u"}, "a.user_id = u.id")
+
 	if q.Name != "" {
 		s = s.Where("u.name like ?", "%"+q.Name+"%")
 	}
@@ -95,8 +99,9 @@ func addAlertFilters(q *validator.AlertListRequest, DB *xorm.Session) *xorm.Sess
 	if q.Customer != "" {
 		s = s.Where("c.name like ?", "%"+q.Customer+"%")
 	}
-	if q.Type > 0 {
-		s = s.Where("a.type = ?", q.Type)
+	if q.Type != "" {
+		a, _ := model.AlertTypeFromString(q.Type)
+		s = s.Where("a.type = ?", *a)
 	}
 	if !q.DateStart.IsZero() {
 		s = s.Where("a.created_at >= ?", q.DateStart)

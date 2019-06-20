@@ -2,6 +2,7 @@ package controller
 
 import (
 	"app/domain/model"
+	"app/domain/validator"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -15,10 +16,15 @@ import (
 type mockAlert struct {
 	alert *model.Alert
 	err   error
+	list  *model.AlertList
 }
 
 func (ac mockAlert) GetAlert(id string) (*model.Alert, error) {
 	return ac.alert, ac.err
+}
+
+func (ac mockAlert) ListAlerts(q *validator.AlertListRequest) (*model.AlertList, error) {
+	return ac.list, ac.err
 }
 
 func TestGetAlert(t *testing.T) {
