@@ -5,6 +5,7 @@ go 1.12
 require (
 	cloud.google.com/go v0.39.0 // indirect
 	github.com/dustin/go-humanize v1.0.0
+	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-xorm/xorm v0.7.1
 	github.com/lib/pq v1.1.1
