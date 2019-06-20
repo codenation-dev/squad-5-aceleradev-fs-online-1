@@ -8,6 +8,7 @@ import (
 
 	"app/application/controller"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xorm/xorm"
 )
@@ -15,6 +16,14 @@ import (
 // NewRouter retorna um novo router.
 func NewRouter(db *xorm.Engine) *gin.Engine {
 	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	config.AllowMethods = []string{"*"}
+	config.AllowHeaders = []string{"Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"}
+
+	router.Use(cors.New(config))
+
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	log.SetOutput(gin.DefaultWriter)
 
