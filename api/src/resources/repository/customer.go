@@ -11,6 +11,7 @@ import (
 // CustomerDB interface
 type CustomerDB interface {
 	CreateCustomer(custumer *model.Customer) error
+	Get(custumer *model.Customer) (bool, error)
 }
 
 // CustomerRepository struct

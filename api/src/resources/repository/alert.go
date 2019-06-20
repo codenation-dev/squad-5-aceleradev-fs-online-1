@@ -13,6 +13,7 @@ type AlertDB interface {
 	GetAlert(id string) (*model.Alert, error)
 	ListAlerts(q *validator.AlertListRequest) ([]model.AlertItem, error)
 	CountAlerts(q *validator.AlertListRequest) (int64, error)
+	CreateAlert(a *model.Alert) error
 }
 
 // AlertRepository struct
