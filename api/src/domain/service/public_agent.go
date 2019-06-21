@@ -17,7 +17,7 @@ type PublicAgents interface {
 // PublicAgentService struct
 type PublicAgentService struct {
 	Repository repository.PublicAgentDB
-	Alert      engine.EngineAlert
+	Alert      engine.Alert
 }
 
 const urlPublicAgent string = "http://www.transparencia.sp.gov.br/PortalTransparencia-Report/Remuneracao.aspx"

@@ -22,13 +22,13 @@ func init() {
 	ch = cache.New(DefaultExpiration, 10*time.Minute)
 }
 
-func (eas EngineAlertService) getUsers() (*[]model.User, error) {
+func (eas AlertService) getUsers() (*[]model.User, error) {
 	q := &validator.UserListRequest{Limit: -1}
 
 	return eas.UserDB.ListUser(q)
 }
 
-func (eas EngineAlertService) createAlert(t model.AlertType, c *model.Customer, p *model.PublicAgent, u *model.User) error {
+func (eas AlertService) createAlert(t model.AlertType, c *model.Customer, p *model.PublicAgent, u *model.User) error {
 	id := builder.GetUniqueID(t, *c)
 	_, has := ch.Get(id)
 	if has {

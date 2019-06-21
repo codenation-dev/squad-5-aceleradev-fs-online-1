@@ -52,7 +52,7 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	}
 
 	// Services
-	engineAlertService := engine.EngineAlertService{
+	engineAlertService := engine.AlertService{
 		CustomerDB:   CustomerRepository,
 		AlertDB:      alertRepository,
 		UserDB:       userRepository,

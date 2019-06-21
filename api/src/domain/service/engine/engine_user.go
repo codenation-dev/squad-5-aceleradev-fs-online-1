@@ -5,13 +5,13 @@ import (
 	"log"
 )
 
-func (eas EngineAlertService) proccessUsers() {
+func (eas AlertService) proccessUsers() {
 	for user := range users {
 		eas.checkUser(user)
 	}
 }
 
-func (eas EngineAlertService) checkUser(user model.User) {
+func (eas AlertService) checkUser(user model.User) {
 	customer := model.Customer{
 		Name: user.Name,
 	}

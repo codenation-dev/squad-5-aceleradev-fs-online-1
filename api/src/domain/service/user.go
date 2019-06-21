@@ -19,7 +19,7 @@ type Users interface {
 // UserService struct
 type UserService struct {
 	Repository repository.UserDB
-	Alert      engine.EngineAlert
+	Alert      engine.Alert
 }
 
 // ListUsers Lista usuários com total

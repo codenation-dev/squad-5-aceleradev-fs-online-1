@@ -55,7 +55,7 @@ func InitSendEmail(db *xorm.Engine) {
 func newEmailController() *EmailController {
 
 	ce := sendemail.ClientEmail{}
-	se := service.EmailService{ce}
+	se := service.EmailService{Client: ce}
 	ec := EmailController{se}
 	return &ec
 

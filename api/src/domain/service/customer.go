@@ -21,7 +21,7 @@ type Customer interface {
 // CustomerService struct
 type CustomerService struct {
 	Repository repository.CustomerDB
-	Alert      engine.EngineAlert
+	Alert      engine.Alert
 }
 
 // Parse recebe um nome de arquivo e retorna o seu conteudo

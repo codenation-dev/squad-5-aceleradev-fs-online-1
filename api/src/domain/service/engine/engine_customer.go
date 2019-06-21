@@ -5,13 +5,13 @@ import (
 	"log"
 )
 
-func (eas EngineAlertService) proccessCustomers() {
+func (eas AlertService) proccessCustomers() {
 	for customer := range customers {
 		eas.checkCustomer(customer)
 	}
 }
 
-func (eas EngineAlertService) checkCustomer(customer model.Customer) {
+func (eas AlertService) checkCustomer(customer model.Customer) {
 	eas.checkCustomerSalary(customer)
 
 	user := model.User{
@@ -30,7 +30,7 @@ func (eas EngineAlertService) checkCustomer(customer model.Customer) {
 	}
 }
 
-func (eas EngineAlertService) checkCustomerSalary(customer model.Customer) {
+func (eas AlertService) checkCustomerSalary(customer model.Customer) {
 	if float64(customer.Salary) >= BiggerSalaryAlert {
 		if err := eas.createAlert(model.BiggerSalaryType, &customer, nil, nil); err != nil {
 			return
