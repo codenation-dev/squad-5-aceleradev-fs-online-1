@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/go-playground/validator.v8"
@@ -25,11 +26,18 @@ func AbortWithValidation(c *gin.Context, err *error) {
 		}
 
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, errors)
+
 	case *strconv.NumError:
 		numError := (*err).(*strconv.NumError)
 		msg := strings.Join([]string{"\"", numError.Num, "\" ", numError.Err.Error()}, "")
 		errors := []map[string]string{map[string]string{"field": "Query", "message": msg}}
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, errors)
+
+	case *time.ParseError:
+		numError := (*err).(*time.ParseError)
+		errors := []map[string]string{map[string]string{"field": "Query", "message": numError.Message}}
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, errors)
+
 	default:
 		log.Printf("Generic Validation error: %T\n", t)
 		c.AbortWithError(http.StatusInternalServerError, *err)

@@ -2,6 +2,7 @@ package application
 
 import (
 	"app/domain/service"
+	customValidator "app/domain/validator"
 	"app/resources/repository"
 	"log"
 	"net/http"
@@ -10,12 +11,18 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-xorm/xorm"
+	"gopkg.in/go-playground/validator.v8"
 )
 
 // NewRouter retorna um novo router.
 func NewRouter(db *xorm.Engine) *gin.Engine {
 	router := gin.Default()
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("alerttype", customValidator.AlertTypeValidator)
+	}
 
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"*"}
@@ -61,6 +68,16 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		PublicAgents: &publicAgentService,
 	}
 
+	alertRepository := repository.AlertRepository{
+		DB: db,
+	}
+	alertService := service.AlertService{
+		Repository: &alertRepository,
+	}
+	ac := controller.AlertController{
+		Alerts: &alertService,
+	}
+
 	// Users
 	router.GET("/", Index)
 	router.POST("/users", uc.CreateUser)
@@ -73,6 +90,10 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Public Agents
 	router.GET("/webcrawler", pac.StartProcess)
+
+	// Alerts
+	router.GET("/alerts/:id", ac.GetAlert)
+	router.GET("/alerts", ac.ListAlerts)
 
 	return router
 }
