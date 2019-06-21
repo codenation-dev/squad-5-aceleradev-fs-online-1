@@ -11,6 +11,7 @@ require (
 	github.com/lib/pq v1.1.1
 	github.com/mattn/go-sqlite3 v1.9.0
 	github.com/oklog/ulid v1.3.1
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/stretchr/testify v1.3.0
 	gopkg.in/go-playground/validator.v8 v8.18.2
 )

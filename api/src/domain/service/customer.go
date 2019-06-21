@@ -4,6 +4,7 @@ import (
 	"app/domain/builder"
 	"app/domain/errors"
 	"app/domain/model"
+	"app/domain/service/engine"
 	"app/resources/repository"
 	"bufio"
 	"io"
@@ -20,6 +21,7 @@ type Customer interface {
 // CustomerService struct
 type CustomerService struct {
 	Repository repository.CustomerDB
+	Alert      engine.Alert
 }
 
 // Parse recebe um nome de arquivo e retorna o seu conteudo
@@ -81,5 +83,7 @@ func (cs CustomerService) createCustomer(customer *model.Customer) (*model.Custo
 	if err != nil {
 		return nil, err
 	}
+
+	cs.Alert.Customers() <- *customer
 	return customer, err
 }

@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
+	"strings"
 	"time"
 
 	"github.com/go-xorm/xorm"
@@ -13,6 +15,7 @@ type AlertDB interface {
 	GetAlert(id string) (*model.Alert, error)
 	ListAlerts(q *validator.AlertListRequest) ([]model.AlertItem, error)
 	CountAlerts(q *validator.AlertListRequest) (int64, error)
+	CreateAlert(a *model.Alert) error
 }
 
 // AlertRepository struct
@@ -83,6 +86,36 @@ func (r AlertRepository) CountAlerts(q *validator.AlertListRequest) (int64, erro
 	}
 
 	return total, nil
+}
+
+// CreateAlert salva o alerta no banco
+func (r AlertRepository) CreateAlert(a *model.Alert) error {
+	_, err := r.DB.InsertOne(a)
+	if err != nil {
+		if strings.Index(strings.ToLower(err.Error()), "unique constraint") >= 0 {
+			return errors.DuplicatedUserError
+		}
+		return err
+	}
+	_, err = r.DB.Insert(getAlertUsers(a))
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func getAlertUsers(a *model.Alert) []model.AlertUser {
+	s := len(a.UsersReceived)
+	users := make([]model.AlertUser, s, s)
+
+	for i, user := range a.UsersReceived {
+		users[i] = model.AlertUser{
+			User:  user,
+			Alert: *a,
+		}
+	}
+
+	return users
 }
 
 func addAlertFilters(q *validator.AlertListRequest, DB *xorm.Engine) *xorm.Session {

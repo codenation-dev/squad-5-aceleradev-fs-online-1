@@ -1,8 +1,11 @@
 package service
 
 import (
+	config "app/application/config/email"
 	"app/domain/model"
 	"app/resources/sendemail"
+	"log"
+	"strconv"
 )
 
 // Email interface
@@ -17,16 +20,23 @@ type EmailService struct {
 
 // Send envia um email
 func (e EmailService) Send(email model.Email) error {
+	if ok, err := strconv.ParseBool(config.Disabled); ok && err == nil {
+		log.Printf("Email Send %#v", email)
+		return nil
+	}
 
 	es := EmailService{}
 	c, err := es.Client.NewClientEmail()
-	defer c.Quit()
 	if err != nil {
 		return err
 	}
+	defer c.Quit()
 
 	for _, k := range email.Recipients {
-		c.Rcpt(k)
+		err := c.Rcpt(k)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Data

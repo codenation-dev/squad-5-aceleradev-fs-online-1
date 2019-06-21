@@ -1,8 +1,8 @@
 package main
 
 import (
-	"app/application/controller"
 	"app/application"
+	"app/application/controller"
 	"app/resources/repository"
 	"log"
 
@@ -17,5 +17,5 @@ func main() {
 	router := application.NewRouter(db)
 
 	log.Fatal(router.Run(":5000"))
-	
+
 }

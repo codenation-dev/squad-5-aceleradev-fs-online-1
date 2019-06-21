@@ -32,7 +32,7 @@ func TestClientEmail_NewClientEmail(t *testing.T) {
 	}
 }
 
-func TestClientEmail_NewClientEmail_ErroAuth(t *testing.T){
+func TestClientEmail_NewClientEmail_ErroAuth(t *testing.T) {
 
 	email.Password = "1234"
 
@@ -43,7 +43,7 @@ func TestClientEmail_NewClientEmail_ErroAuth(t *testing.T){
 	assert.NotNil(t, err)
 }
 
-func TestClientEmail_NewClientEmail_ErroTCP(t *testing.T){
+func TestClientEmail_NewClientEmail_ErroTCP(t *testing.T) {
 
 	email.Host = "1234"
 
@@ -54,7 +54,7 @@ func TestClientEmail_NewClientEmail_ErroTCP(t *testing.T){
 	assert.NotNil(t, err)
 }
 
-func TestClientEmail_NewClientEmail_ErroSmtpNewClient(t *testing.T){
+func TestClientEmail_NewClientEmail_ErroSmtpNewClient(t *testing.T) {
 
 	email.Host = "1234"
 
@@ -65,7 +65,7 @@ func TestClientEmail_NewClientEmail_ErroSmtpNewClient(t *testing.T){
 	assert.NotNil(t, err)
 }
 
-func TestClientEmail_NewClientEmail_ErroMail(t *testing.T){
+func TestClientEmail_NewClientEmail_ErroMail(t *testing.T) {
 
 	email.Email = "1234"
 

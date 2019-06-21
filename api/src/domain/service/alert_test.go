@@ -27,6 +27,10 @@ func (m mockDBAlert) CountAlerts(q *validator.AlertListRequest) (int64, error) {
 	return m.count, m.err
 }
 
+func (m mockDBAlert) CreateAlert(a *model.Alert) error {
+	return m.err
+}
+
 func TestAlertService_GetAlert(t *testing.T) {
 	alert := model.Alert{
 		ID:            "12345678901234567890123456",

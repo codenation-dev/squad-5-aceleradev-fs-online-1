@@ -11,6 +11,7 @@ import (
 // CustomerDB interface
 type CustomerDB interface {
 	CreateCustomer(custumer *model.Customer) error
+	Get(custumer *model.Customer) (bool, error)
 }
 
 // CustomerRepository struct
@@ -29,4 +30,9 @@ func (r CustomerRepository) CreateCustomer(custumer *model.Customer) error {
 		return err
 	}
 	return nil
+}
+
+// Get Recupera um cliente
+func (r CustomerRepository) Get(custumer *model.Customer) (bool, error) {
+	return r.DB.Get(custumer)
 }

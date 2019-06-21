@@ -9,7 +9,7 @@ import (
 
 // PublicAgentDB interface
 type PublicAgentDB interface {
-	CreateOrUpdatePublicAgent(publicAgent *model.PublicAgent) error
+	CreateOrUpdatePublicAgent(publicAgent *model.PublicAgent) (bool, error)
 }
 
 // PublicAgentRepository struct
@@ -18,7 +18,7 @@ type PublicAgentRepository struct {
 }
 
 // CreateOrUpdatePublicAgent cria ou atualiza o funcionário publico
-func (r PublicAgentRepository) CreateOrUpdatePublicAgent(publicAgent *model.PublicAgent) error {
+func (r PublicAgentRepository) CreateOrUpdatePublicAgent(publicAgent *model.PublicAgent) (bool, error) {
 	var err error
 	_, err = r.DB.InsertOne(publicAgent)
 	if err != nil {
@@ -30,17 +30,23 @@ func (r PublicAgentRepository) CreateOrUpdatePublicAgent(publicAgent *model.Publ
 			}
 			_, err = r.DB.Get(&ePublicAgent)
 			if err != nil {
-				return err
+				return false, err
 			}
 
+			publicAgent.ID = ePublicAgent.ID
+			updated := false
 			uPublicAgent := model.PublicAgent{Checked: publicAgent.Checked}
 			if ePublicAgent.Salary != publicAgent.Salary {
 				uPublicAgent.UpdatedAt = publicAgent.Checked
 				uPublicAgent.Salary = publicAgent.Salary
+				updated = true
 			}
 			_, err = r.DB.Id(ePublicAgent.ID).Update(uPublicAgent)
+			return updated, err
 		}
+
+		return false, err
 	}
 
-	return err
+	return true, nil
 }

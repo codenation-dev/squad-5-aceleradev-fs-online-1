@@ -2,6 +2,7 @@ package application
 
 import (
 	"app/domain/service"
+	"app/domain/service/engine"
 	customValidator "app/domain/validator"
 	"app/resources/repository"
 	"log"
@@ -23,7 +24,6 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("alerttype", customValidator.AlertTypeValidator)
 	}
-
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"*"}
 	config.AllowMethods = []string{"*"}
@@ -34,48 +34,56 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	log.SetOutput(gin.DefaultWriter)
 
+	// Repositories
 	userRepository := repository.UserRepository{
 		DB: db,
 	}
-	userService := service.UserService{
-		Repository: userRepository,
-	}
-
-	uc := controller.UserController{
-		Users: &userService,
-	}
-
 	CustomerRepository := repository.CustomerRepository{
 		DB: db,
 	}
-
-	customerService := service.CustomerService{
-		Repository: &CustomerRepository,
-	}
-	cc := controller.CustomerController{
-		Customers: &customerService,
-	}
-
 	publicAgentRepository := repository.PublicAgentRepository{
 		DB: db,
 	}
-
-	publicAgentService := service.PublicAgentService{
-		Repository: &publicAgentRepository,
-	}
-
-	pac := controller.PublicAgentController{
-		PublicAgents: &publicAgentService,
-	}
-
 	alertRepository := repository.AlertRepository{
 		DB: db,
 	}
 	alertService := service.AlertService{
 		Repository: &alertRepository,
 	}
+
+	// Services
+	engineAlertService := engine.AlertService{
+		CustomerDB:   CustomerRepository,
+		AlertDB:      alertRepository,
+		UserDB:       userRepository,
+		EmailChannel: controller.EmailChannel,
+	}
+	engineAlertService.Init()
+	customerService := service.CustomerService{
+		Repository: &CustomerRepository,
+		Alert:      engineAlertService,
+	}
+	publicAgentService := service.PublicAgentService{
+		Repository: &publicAgentRepository,
+		Alert:      engineAlertService,
+	}
+	userService := service.UserService{
+		Repository: userRepository,
+		Alert:      engineAlertService,
+	}
+
+	// Controllers
+	uc := controller.UserController{
+		Users: &userService,
+	}
 	ac := controller.AlertController{
 		Alerts: &alertService,
+	}
+	cc := controller.CustomerController{
+		Customers: &customerService,
+	}
+	pac := controller.PublicAgentController{
+		PublicAgents: &publicAgentService,
 	}
 
 	// Users
