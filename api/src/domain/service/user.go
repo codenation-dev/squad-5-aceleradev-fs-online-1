@@ -3,6 +3,7 @@ package service
 import (
 	"app/domain/builder"
 	"app/domain/model"
+	"app/domain/service/engine"
 	"app/domain/validator"
 	"app/resources/repository"
 )
@@ -18,6 +19,7 @@ type Users interface {
 // UserService struct
 type UserService struct {
 	Repository repository.UserDB
+	Alert      engine.EngineAlert
 }
 
 // ListUsers Lista usuários com total
@@ -45,6 +47,9 @@ func (us UserService) UpdateUser(id string, userCreation *validator.UserCreation
 	user.ID = id
 
 	err := us.Repository.UpdateUser(user)
+	if err == nil {
+		us.Alert.Users() <- *user
+	}
 
 	return user, err
 }
@@ -54,6 +59,9 @@ func (us UserService) CreateUser(userCreation *validator.UserCreation) (*model.U
 	user := builder.UserCreationToUser(userCreation)
 
 	err := us.Repository.CreateUser(user)
+	if err == nil {
+		us.Alert.Users() <- *user
+	}
 
 	return user, err
 }

@@ -15,3 +15,13 @@ func UserCreationToUser(userCreation *validator.UserCreation) *model.User {
 		Email:    userCreation.Email,
 	}
 }
+
+// GetRecipients retorna a lista de e-mails
+func GetRecipients(users []model.User) []string {
+	s := len(users)
+	emails := make([]string, s, s)
+	for i, u := range users {
+		emails[i] = u.Email
+	}
+	return emails
+}

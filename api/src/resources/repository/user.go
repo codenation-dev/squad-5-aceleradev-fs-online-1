@@ -12,6 +12,7 @@ import (
 // UserDB interface
 type UserDB interface {
 	GetUser(id string) (*model.User, error)
+	Get(user *model.User) (bool, error)
 	CreateUser(user *model.User) error
 	ListUser(q *validator.UserListRequest) (*[]model.User, error)
 	CountUsers(q *validator.UserListRequest) (int64, error)
@@ -32,6 +33,11 @@ func (r UserRepository) GetUser(id string) (*model.User, error) {
 	}
 
 	return &user, nil
+}
+
+// Get Recupera um User
+func (r UserRepository) Get(user *model.User) (bool, error) {
+	return r.DB.Get(user)
 }
 
 // CreateUser cria um novo usuário

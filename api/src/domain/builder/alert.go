@@ -2,6 +2,8 @@ package builder
 
 import (
 	"app/domain/model"
+	"bytes"
+	"fmt"
 )
 
 // AlertBuilder cria um novo alerta
@@ -28,4 +30,24 @@ func getAlertDescription(t model.AlertType) string {
 	default:
 		return ""
 	}
+}
+
+// GetUniqueID recupera o ID identificador do alerta
+func GetUniqueID(t model.AlertType, c model.Customer) string {
+	return t.String() + c.ID
+}
+
+// GetBody recupera o body do e-mail de alerta
+func GetBody(a model.Alert) string {
+	b := bytes.NewBufferString(a.Description)
+	if a.Customer != nil {
+		b.WriteString(fmt.Sprintf("\n Cliente: %s", a.Customer.Name))
+	}
+	if a.User != nil {
+		b.WriteString(fmt.Sprintf("\n Funcionário do Banco: %s", a.User.Name))
+	}
+	if a.PublicAgent != nil {
+		b.WriteString(fmt.Sprintf("\n Funcionário publico: %s", a.PublicAgent.Name))
+	}
+	return b.String()
 }

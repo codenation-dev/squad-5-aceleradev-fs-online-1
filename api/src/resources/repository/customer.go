@@ -31,3 +31,8 @@ func (r CustomerRepository) CreateCustomer(custumer *model.Customer) error {
 	}
 	return nil
 }
+
+// Get Recupera um cliente
+func (r CustomerRepository) Get(custumer *model.Customer) (bool, error) {
+	return r.DB.Get(custumer)
+}

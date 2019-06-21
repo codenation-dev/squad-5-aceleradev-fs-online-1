@@ -9,4 +9,5 @@ var (
 	Port     = config.GetEnv("EMAIL_PORT", "465")
 	Email    = config.GetEnv("EMAIL_USER", "banco.uati@gmail.com")
 	Password = config.GetEnv("EMAIL_PASS", "bancouat123")
+	Disabled = config.GetEnv("EMAIL_DISABLED", "false")
 )

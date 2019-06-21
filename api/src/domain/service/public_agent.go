@@ -2,6 +2,7 @@ package service
 
 import (
 	"app/domain/builder"
+	"app/domain/service/engine"
 	"app/resources/repository"
 	"app/resources/webcrawler"
 	"log"
@@ -16,6 +17,7 @@ type PublicAgents interface {
 // PublicAgentService struct
 type PublicAgentService struct {
 	Repository repository.PublicAgentDB
+	Alert      engine.EngineAlert
 }
 
 const urlPublicAgent string = "http://www.transparencia.sp.gov.br/PortalTransparencia-Report/Remuneracao.aspx"
@@ -82,10 +84,13 @@ func (us PublicAgentService) processChannel(pos int, c chan []string, done chan 
 	log.Printf("processChannel Begin %v\n", pos)
 	for line := range c {
 		publicAgent := builder.PublicAgentFrom(&line)
-		err := us.Repository.CreateOrUpdatePublicAgent(publicAgent)
+		updated, err := us.Repository.CreateOrUpdatePublicAgent(publicAgent)
 		if err != nil {
 			log.Printf("processChannel %#v\n", publicAgent)
 			log.Println("processChannel Error", err)
+		}
+		if updated {
+			us.Alert.PublicAgents() <- *publicAgent
 		}
 	}
 	log.Printf("processChannel End %v\n", pos)

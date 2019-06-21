@@ -24,12 +24,11 @@ func (ac AlertController) GetAlert(c *gin.Context) {
 
 	alert, err := ac.Alerts.GetAlert(alertURI.ID)
 
-	switch {
-	case err != nil:
+	if err != nil {
 		errors.AbortWithError(c, &err)
-	case alert == nil:
+	} else if alert == nil {
 		c.AbortWithStatus(http.StatusNotFound)
-	default:
+	} else {
 		c.JSON(http.StatusOK, alert)
 	}
 

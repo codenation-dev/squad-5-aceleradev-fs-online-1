@@ -18,6 +18,11 @@ type mockDBUser struct {
 func (m mockDBUser) GetUser(id string) (*model.User, error) {
 	return m.user, m.err
 }
+
+func (m mockDBUser) Get(user *model.User) (bool, error) {
+	return true, m.err
+}
+
 func (m mockDBUser) CreateUser(user *model.User) error {
 	return m.err
 }
