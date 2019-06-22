@@ -1,12 +1,23 @@
 import React from 'react';
 import CSVReader from 'react-csv-reader'
 import Dropzone from 'react-dropzone';
-import csv from 'csv';
-
+//import axios , { post } from 'axios';
 import './uploadFile.css'
 import Botao from '../../componentes/Botao/Botao';
-
+  
 export default class uploadFile extends React.Component {
+
+    /*
+    http://bancouati.ga/api/customers
+    onDrop(files) {
+        this.setState({ files });
+        const file = files[0];
+        this.props.actions.uploadRequest({
+           file,
+           name: 'Customers'
+        })
+      }
+    
     onDrop(files) {
 
         this.setState({ files });
@@ -31,12 +42,12 @@ export default class uploadFile extends React.Component {
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify(newUser)
-                    })*/
+                    })
                 };
             });
         };
         reader.readAsBinaryString(file);
-    }
+    }*/           
     render() {
         return (
             <div className="UploadFileContainer">
@@ -52,7 +63,6 @@ export default class uploadFile extends React.Component {
                                 inputStyle={{ color: 'red' }}
                             />
                             <br />
-
                             <div className="Dropzone">
                                 <Dropzone
                                     accept=".csv"
@@ -63,15 +73,14 @@ export default class uploadFile extends React.Component {
                                     </div>
                                 </Dropzone>
                             </div>
-
                             <div className="Upload">
-                                <Botao> Enviar </Botao>
+                                <Botao type="submit" onChange={this.onFileLoaded}> Enviar </Botao>
                             </div>
                         </center>
                     </div>
                 </div>
             </div>
-        );
+        );    
     }
 }
 
