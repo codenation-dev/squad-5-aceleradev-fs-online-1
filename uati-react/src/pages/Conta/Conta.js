@@ -11,7 +11,7 @@ class Conta extends Component {
     super(props)
 
     this.nomeRef = React.createRef()
-    this.telefoneRef = React.createRef()
+    this.usuarioRef = React.createRef()
     this.emailRef = React.createRef()
     this.senhaRef = React.createRef()
 
@@ -20,11 +20,11 @@ class Conta extends Component {
 
   habilitaOuDesabilita = () => {
     const campoNome = this.nomeRef.current
-    const campoTelefone = this.telefoneRef.current
+    const campoUsuario = this.usuario.current
     const campoEmail = this.emailRef.current
     const campoSenha = this.senhaRef.current
 
-    if (campoNome.temErro() || campoTelefone.temErro() || campoEmail.temErro() || campoSenha.temErro()) {
+    if (campoNome.temErro() || campoUsuario.temErro() || campoEmail.temErro() || campoSenha.temErro()) {
       this.setState({ desabilitado: true })
     } else {
       this.setState({ desabilitado: false })
@@ -41,8 +41,8 @@ class Conta extends Component {
         <Legenda htmlFor="nome">Nome:</Legenda>
         <Campo ref={this.nomeRef} id="nome" type="text" name="nome" placeholder="Nome" required minLength={10} onChange={this.habilitaOuDesabilita} />
         
-        <Legenda htmlFor="telefone">Telefone:</Legenda>
-        <Campo ref={this.telefoneRef} id="telefone" type="tel" name="telefone" placeholder="Telefone" required onChange={this.habilitaOuDesabilita} />
+        <Legenda htmlFor="usuario">Usuário:</Legenda>
+        <Campo ref={this.usuarioRef} id="usuario" type="tel" name="telefone" placeholder="Telefone" required onChange={this.habilitaOuDesabilita} />
         
         <Legenda htmlFor="email">Email:</Legenda>
         <Campo ref={this.emailRef} id="email" type="email" name="email" placeholder="Email" required onChange={this.habilitaOuDesabilita} />

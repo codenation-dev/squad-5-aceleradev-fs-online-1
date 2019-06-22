@@ -1,0 +1,23 @@
+fieldset
+{
+  border: #1BBF77 solid 1px;
+  max-width:500px;
+  padding:16px;	
+  margin: 0 auto;
+}
+.legend
+{
+  margin-bottom:0px;
+  margin-left:16px;
+  font-weight: bold;
+}
+
+p {
+    font-weight: normal;
+    margin: 0 10px;
+}
+
+.rigth {
+    float: right;
+    margin: 10px;
+}

@@ -1,0 +1,9 @@
+.table {
+    text-align: justify;
+    width: 100%;
+}
+
+tr {
+    display: flex;
+    align-items: center;
+}
