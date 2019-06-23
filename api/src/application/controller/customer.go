@@ -64,7 +64,7 @@ func (cc CustomerController) CreateCustomer(c *gin.Context) {
 	if err != nil {
 		errors.AbortWithError(c, &err)
 	} else {
-		c.JSON(http.StatusOK, customer)
+		c.JSON(http.StatusCreated, customer)
 	}
 }
 
@@ -87,7 +87,7 @@ func (cc CustomerController) UpdateCustomer(c *gin.Context) {
 	if err != nil {
 		errors.AbortWithError(c, &err)
 	} else {
-		c.JSON(http.StatusOK, customer)
+		c.JSON(http.StatusNoContent, customer)
 	}
 }
 

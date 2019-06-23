@@ -15,7 +15,6 @@ import (
 // Customer interface
 type Customer interface {
 	Parse(file multipart.File) (*model.CustomerInsert, error)
-	read(reader io.Reader) (*model.CustomerInsert, error)
 	CreateCustomer(customer *model.Customer) (*model.Customer, error)
 	UpdateCustomer(id string, customer *model.Customer) (*model.Customer, error)
 	ListCustomer(q *validator.CustomerListRequest) (*model.CustomerList, error)
