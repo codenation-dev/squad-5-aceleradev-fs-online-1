@@ -1,12 +1,12 @@
 import protocolo from './configuracao'
-let url = "/alerts"
 
 export function getAlerts() {
- return protocolo.get(url)   
+    const url = "/alerts"
+    return protocolo.get(url)   
 }
 
 export function getIdAlert(id) {
-    url +=`/${id}`
+    const url =`/alerts/${id}`
     return protocolo.get(url)
 }
 

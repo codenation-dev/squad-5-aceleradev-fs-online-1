@@ -12,10 +12,10 @@ const TBody = ({ alertas, usuarios }) => (
                     <tr key={alerta.id}>
                         <Td>{alerta.type}</Td>
                         <Td id="name">{alerta.customer_name}</Td>
-                        <Td>{alerta.datetime}</Td>
+                        <Td>{alerta.datetime.substring(0,16).replace('T', ' ')}</Td>
                         <Td>
                             <Link className="link-mais_info" to={{
-                                pathname: `alertas/${alerta.id}`,
+                                pathname: `/${alerta.id}`,
                                 state: {
                                     id: alerta.id
                                 }

@@ -14,10 +14,10 @@ const Routes = () => (
             <Route exact path="/" component={Login} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/upload" component={UploadFile} />
+            {/* <Route exact path="/upload" component={UploadFile} /> */}
             <Route exact path="/conta" component={Conta} />
             <Route exact path="/alertas" component={Alertas} />
-            <Route path="/alertas/:alerta" component={({match}) => (<AlertasInfo id={match.params.alerta} />)} />
+            <Route exact path="/:alerta" component={({match}) => (<AlertasInfo id={match.params.alerta} />)} />
          
         </Switch>
     </BrowserRouter>

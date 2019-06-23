@@ -17,7 +17,6 @@ class AlertasInfo extends Component {
     }
 
     load = () => {
-        console.log(this.props)
         apiAlertas.getIdAlert(this.props.id)
             .then(response => {
                 this.setState({ alerta: response.data })
@@ -59,7 +58,7 @@ class AlertasInfo extends Component {
 
                             <div>
                                 <p> Usuários que receberam alerta: </p>
-                                <Table usuarios={this.state.alerta.users_received} paginacao="2" cabecalho={cabecalho} />                               
+                                <Table usuarios={this.state.alerta.users_received} length={this.state.alerta.users_received.length} paginacao="2" cabecalho={cabecalho} />                               
                             </div>
 
                             <div className="rigth">

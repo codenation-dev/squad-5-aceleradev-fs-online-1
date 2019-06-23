@@ -16,7 +16,6 @@ function Alertas() {
     "Data",
     "Detalhes"
   ]
- 
 
 useEffect(() => {
     apiAlerts.getAlerts()
@@ -31,13 +30,13 @@ useEffect(() => {
       })
   }, [])
 
+
   return (    
     <div className="container">
-         {!carregando ?  
+         {/* {!carregando ?  */}
+          <Table cabecalho={cabecalho} length={length} alertas={alertas} usuarios={usuarios} setAlertas={setAlertas} paginacao={paginacao}  />
          
-         <Table cabecalho={cabecalho} length={length} alertas={alertas} usuarios={usuarios} setAlertas={setAlertas} paginacao={paginacao}  />
-         
-          : 'carregando...'}
+          {/* : 'carregando...'} */}
        
     </div>
   )

@@ -1,6 +1,7 @@
 .table {
     text-align: justify;
     width: 100%;
+    /* min-height: 473px; */
 }
 
 tr {
