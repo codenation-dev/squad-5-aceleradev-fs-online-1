@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"mime/multipart"
 	"app/domain/validator"
+	"app/domain/errors"
 	"github.com/gin-gonic/gin"
 	"app/domain/model"
 	"testing"
@@ -18,36 +19,36 @@ import (
 
 type mockCustomer struct {
 	customer  *model.Customer
-	customerList *model.CustomerInsert
+	customerInsert *model.CustomerInsert
+	customerList *model.CustomerList
 	err   error
-	count int64
 }
 
 func (mk mockCustomer) Parse(file multipart.File) (*model.CustomerInsert, error){
 
-	return mk.customerList, mk.err
+	return mk.customerInsert, mk.err
 }
 
 func (mk mockCustomer) CreateCustomer(customer *model.Customer) (*model.Customer, error){
 
-	return nil, nil
+	return mk.customer, mk.err
 }
 
 func (mk mockCustomer) UpdateCustomer(id string, customer *model.Customer) (*model.Customer, error){
-
-	return nil, nil
+	mk.customer.ID = id
+	return mk.customer, mk.err
 }
 
 func (mk mockCustomer) ListCustomer(q *validator.CustomerListRequest) (*model.CustomerList, error){
 
-	return nil, nil
+	return mk.customerList, mk.err
 }
 
 
 func TestCustomerController_UploadCustomer(t *testing.T) {
 
 	mock := mockCustomer{
-		customerList: &model.CustomerInsert{
+		customerInsert: &model.CustomerInsert{
 			Success: 1,
 			AlreadyExist: 0,
 		},
@@ -91,4 +92,293 @@ func TestCustomerController_UploadCustomer(t *testing.T) {
 	router.ServeHTTP(w, req)
 	assert.Equal(t, 200, w.Code)
 	assert.Equal(t, "{\"success\":1,\"alreadyExist\":0}", w.Body.String())
+}
+
+func TestCustomerController_CreateCustomer(t *testing.T){
+
+	mock := mockCustomer{
+		customer: &model.Customer{
+			ID: "1111",
+			Name: "test",
+			Salary: 1111.11,
+		},
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.POST("/customer", cc.CreateCustomer)
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 1111.11
+	  }`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("POST", "/customer", b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 201, w.Code)
+	assert.Equal(t, w.Body.String(), "{\"id\":\"1111\",\"name\":\"test\",\"salary\":1111.11}")
+
+}
+
+func TestCustomerController_CreateCustomer_DuplicatedCustomerError(t *testing.T){
+
+	mock := mockCustomer{
+		customer: nil,
+		err: errors.DuplicatedCustomerError,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.POST("/customer", cc.CreateCustomer)
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 1111.11
+	  }`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("POST", "/customer", b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 400, w.Code)
+	assert.Equal(t, w.Body.String(), "[{\"message\":\"Customer já existe\"}]")
+
+}
+
+func TestCustomerController_CreateCustomer_ValidationErrorCustomerName(t *testing.T){
+
+	mock := mockCustomer{
+		customer: nil,
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.POST("/customer", cc.CreateCustomer)
+
+	b := bytes.NewReader([]byte(`{
+		"name": "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
+		"salary": 1111.11
+	  }`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("POST", "/customer", b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 422, w.Code)
+	assert.Equal(t, w.Body.String(), "[{\"field\":\"Name\",\"message\":\"Field validation for 'Name' failed on the 'max' tag\"}]")
+
+}
+
+func TestCustomerController_CreateCustomer_ValidationErrorCustomerSalary(t *testing.T){
+
+	mock := mockCustomer{
+		customer: nil,
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.POST("/customer", cc.CreateCustomer)
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 0
+	  }`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("POST", "/customer", b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 422, w.Code)
+	assert.Equal(t, w.Body.String(), `[{"field":"Salary","message":"Field validation for 'Salary' failed on the 'required' tag"}]`)
+
+}
+
+func TestCustomerController_UpdateCustomer(t *testing.T){
+
+	mock := mockCustomer{
+		customer: &model.Customer{
+			ID: "1111",
+			Name: "test",
+			Salary: 1111.11,
+		},
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.PUT("/customer/:customerId", cc.UpdateCustomer)
+
+	uri := "/customer/11111111111111111111111111"
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 100.10
+	}`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("PUT", uri, b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 204, w.Code)
+	assert.Equal(t, "", w.Body.String())
+
+}
+
+func TestCustomerController_UpdateCustomer_ValidationErrorCustomerName(t *testing.T){
+
+	mock := mockCustomer{
+		customer: &model.Customer{
+			ID: "1111",
+			Name: "test",
+			Salary: 1111.11,
+		},
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.PUT("/customer/:customerId", cc.UpdateCustomer)
+
+	uri := "/customer/11111111111111111111111111"
+
+	b := bytes.NewReader([]byte(`{
+		"name": "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
+		"salary": 100.10
+	}`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("PUT", uri, b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 422, w.Code)
+	assert.Equal(t, "[{\"field\":\"Name\",\"message\":\"Field validation for 'Name' failed on the 'max' tag\"}]", w.Body.String())
+
+}
+
+func TestCustomerController_UpdateCustomer_ValidationErrorCustomerSalary(t *testing.T){
+
+	mock := mockCustomer{
+		customer: &model.Customer{
+			ID: "1111",
+			Name: "test",
+			Salary: 1111.11,
+		},
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.PUT("/customer/:customerId", cc.UpdateCustomer)
+
+	uri := "/customer/11111111111111111111111111"
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 0
+	}`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("PUT", uri, b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 422, w.Code)
+	assert.Equal(t, "[{\"field\":\"Salary\",\"message\":\"Field validation for 'Salary' failed on the 'required' tag\"}]", w.Body.String())
+
+}
+
+func TestCustomerController_UpdateCustomer_DuplicatedCustomerError(t *testing.T){
+
+	mock := mockCustomer{
+		customer: &model.Customer{
+			ID: "1111",
+			Name: "test",
+			Salary: 1111.11,
+		},
+		err: errors.DuplicatedCustomerError,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.PUT("/customer/:customerId", cc.UpdateCustomer)
+
+	uri := "/customer/11111111111111111111111112"
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 110.10
+	}`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("PUT", uri, b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 400, w.Code)
+	assert.Equal(t, "[{\"message\":\"Customer já existe\"}]", w.Body.String())
+
+}
+
+func TestCustomerController_ListCustomer(t *testing.T){
+
+	cl := []model.Customer{model.Customer{
+		ID: "1111",
+		Name: "test",
+		Salary: 1111.11,
+	}}
+
+	mock := mockCustomer{
+		customerList: &model.CustomerList{
+			Data: cl,
+			Records: int64(1),
+		},
+		err: nil,
+	}
+
+	cc := CustomerController{mock}
+
+	router := gin.Default()
+
+	router.GET("/customers", cc.ListCustomer)
+
+	b := bytes.NewReader([]byte(`{
+		"name": "test",
+		"salary": 110.10
+	}`))
+
+	w := httptest.NewRecorder()
+	req, err := http.NewRequest("GET", "/customers", b)
+	assert.Nil(t, err)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, "{\"Records\":1,\"Data\":[{\"id\":\"1111\",\"name\":\"test\",\"salary\":1111.11}]}", w.Body.String())
+
 }
