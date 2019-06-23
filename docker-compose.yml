@@ -12,7 +12,7 @@ services:
     volumes: 
       - ./api/src:/go/src/app
     environment:
-      EMAIL_DISABLED: true
+      EMAIL_DISABLED: "true"
   swagger-ui:
     image: swaggerapi/swagger-ui
     restart: always
