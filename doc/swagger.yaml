@@ -206,6 +206,102 @@ paths:
       security:
         - api_key:
             - 'write:customers'
+    get:
+      tags:
+      - Customers
+      summary: Listar os Customer
+      operationId: ListCustomer
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Quantidade de registros"
+        required: false
+        schema:
+          type: integer
+          default: 20
+      - name: "offset"
+        in: "query"
+        description: "Carregar os registros a partir de"
+        required: false
+        schema:
+          type: integer
+          default: 0
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerList'
+        404:
+          description: Users not found
+          content: {}
+      security:
+        - api_key:
+            - 'read:customer'
+  /customer:
+    post:
+      tags:
+        - Customers
+      summary: Create novos customer
+      operationId: createCustomer
+      requestBody:
+        description: Dados Básicos do customes
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreation'
+      responses:
+        202:
+          description: Successful created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Validation error
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+      security:
+        - api_key:
+            - 'write:customers'
+  /customer/{customerId}:
+    put:
+      tags:
+      - Customers
+      summary: Alterar um customer existente
+      operationId: updateCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: ID do customer
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Dados básicos do customer
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreation'
+      responses:
+        204:
+          description: successful operation
+          content: {}
+        400:
+          description: Validation error
+          content: {}
+        404:
+          description: Customer not found
+          content: {}
+        422:
+          description: Invalid request body
+          content: {}
+      security:
+        - api_key:
+            - 'write:customer'
   /alerts:
     get:
       tags:
@@ -462,6 +558,14 @@ components:
         salary:
           type: number
           format: float
+    CustomerCreation:
+      type: object
+      properties:
+        name:
+          type: string
+        salary:
+          type: number
+          format: float
     PublicAgent:
       type: object
       properties:
@@ -476,6 +580,16 @@ components:
         salary:
           type: number
           format: float
+    CustomerList:
+      type: object
+      properties:
+        records:
+          type: integer
+          format: int64
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
     Alert:
       type: object
       properties:
