@@ -50,6 +50,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	dasboardRepository := repository.DasboardRepository{
 		DB: db,
 	}
+	loginRepository := repository.LoginRepository{
+		DB: db,
+	}
 
 	// Services
 	dasboardService := service.DasboardService{
@@ -78,6 +81,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		Repository: userRepository,
 		Alert:      engineAlertService,
 	}
+	loginService := service.LoginService{
+		Repository: loginRepository,
+	}
 
 	// Controllers
 	dc := controller.DashboardController{
@@ -94,6 +100,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	}
 	pac := controller.PublicAgentController{
 		PublicAgents: &publicAgentService,
+	}
+	lc := controller.LoginController{
+		Login: loginService,
 	}
 
 	// Users
@@ -119,6 +128,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	// Dashboards
 	router.GET("/dashboard/alerts", dc.GetAlerts)
 	router.GET("/dashboard/customer", dc.ListCustomers)
+
+	// Login
+	router.POST("/auth", lc.Authorization)
 
 	return router
 }
