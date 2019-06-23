@@ -1,6 +1,7 @@
 package service
 
 import (
+	"app/domain/validator"
 	"app/domain/errors"
 	"app/domain/model"
 	"fmt"
@@ -29,6 +30,20 @@ func (mk mockDBCustomer) CreateCustomer(custumer *model.Customer) error {
 
 func (mk mockDBCustomer) Get(custumer *model.Customer) (bool, error) {
 	return true, mk.err
+}
+
+func (mk mockDBCustomer) UpdateCustomer(customer *model.Customer) error {
+	return nil
+}
+
+func (mk mockDBCustomer) ListCustomer(q *validator.CustomerListRequest) (*[]model.Customer, error){
+
+	return &[]model.Customer{}, nil
+}
+
+func (mk mockDBCustomer) CountCustomers() (int64, error) {
+
+	return int64(0), nil
 }
 
 var (

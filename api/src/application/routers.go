@@ -95,6 +95,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Customers
 	router.POST("/customers", cc.UploadCustomer)
+	router.POST("/customer", cc.CreateCustomer)
+	router.PUT("/customer/:customerId", cc.UpdateCustomer)
+	router.GET("/customers", cc.ListCustomer)
 
 	// Public Agents
 	router.GET("/webcrawler", pac.StartProcess)
