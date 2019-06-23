@@ -342,8 +342,23 @@ paths:
     get:
       tags:
       - Dashboard
-      summary: Consultar ultimos clientes
+      summary: Consultar ultimos alertas
       operationId: GetDashboardCustomers
+      parameters: 
+      - name: "limit"
+        in: "query"
+        description: "Quantidade de registros"
+        required: false
+        schema:
+          type: integer
+          default: 20
+      - name: "offset"
+        in: "query"
+        description: "Carregar os registros a partir de"
+        required: false
+        schema:
+          type: integer
+          default: 0
       responses:
         200:
           description: successful operation
@@ -571,6 +586,8 @@ components:
       items:
         type: object
         properties:
+          id:
+            type: string
           name: 
             type: string
           salary:

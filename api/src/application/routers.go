@@ -53,7 +53,8 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Services
 	dasboardService := service.DasboardService{
-		Repository: dasboardRepository,
+		Repository:      dasboardRepository,
+		AlertRepository: alertRepository,
 	}
 	alertService := service.AlertService{
 		Repository: &alertRepository,
@@ -114,6 +115,7 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Dashboards
 	router.GET("/dashboard/alerts", dc.GetAlerts)
+	router.GET("/dashboard/customer", dc.ListCustomers)
 
 	return router
 }

@@ -33,3 +33,21 @@ func (dc DashboardController) GetAlerts(c *gin.Context) {
 	}
 
 }
+
+// ListCustomers Lista os ultimos alertas
+func (dc DashboardController) ListCustomers(c *gin.Context) {
+	var q validator.DashboardCustomerRequest
+	if err := c.ShouldBindQuery(&q); err != nil {
+		validator.AbortWithValidation(c, &err)
+		return
+	}
+
+	customers, err := dc.Dashboads.ListCustomers(q)
+
+	if err != nil {
+		errors.AbortWithError(c, &err)
+	} else {
+		c.JSON(http.StatusOK, customers)
+	}
+
+}

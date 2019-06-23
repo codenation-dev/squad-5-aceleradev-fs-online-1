@@ -15,6 +15,7 @@ const YearMonthFormat = "2006-01"
 // DasboardDB interface
 type DasboardDB interface {
 	GetData(q validator.DashboardRequest) (*model.Dashboard, error)
+	ListCustomers(q validator.DashboardCustomerRequest) ([]model.DashboardCustomer, error)
 }
 
 // DasboardRepository struct
@@ -90,4 +91,30 @@ func (r DasboardRepository) GetData(q validator.DashboardRequest) (*model.Dashbo
 	d := builder.DashboardFromDB(results, totals)
 
 	return d, nil
+}
+
+// ListCustomers lista os ultimos alertas de clientes
+func (r DasboardRepository) ListCustomers(q validator.DashboardCustomerRequest) ([]model.DashboardCustomer, error) {
+	var a []model.DashboardCustomer
+	if q.Limit == 0 {
+		q.Limit = 20
+	}
+
+	err := r.DB.Table([]string{"alert", "a"}).
+		Select(`a.id,c.name,a.created_at datetime, a.type,
+	CASE WHEN c.salary > p.salary THEN c.salary
+		 ELSE p.salary
+	end salary,
+	(select count(*) from alert_user au where au.alert_id=a.id) users_quantity`).
+		Join("LEFT", []string{"customer", "c"}, "a.customer_id = c.id").
+		Join("LEFT", []string{"public_agent", "p"}, "a.public_agent_id = p.id").
+		OrderBy("a.created_at DESC").
+		Limit(q.Limit, q.Offset).
+		Find(&a)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return a, nil
 }
