@@ -31,7 +31,7 @@ func (eas AlertService) checkPublicAgent(publicAgent model.PublicAgent) {
 	}
 
 	if has {
-		if builder.Round(float64(customer.Salary)) != builder.Round(publicAgent.Salary) {
+		if builder.Round(float64(customer.Salary)) < builder.Round(publicAgent.Salary) {
 			customer.Salary = float32(publicAgent.Salary)
 			if err = eas.CustomerDB.UpdateCustomer(&customer); err != nil {
 				return
