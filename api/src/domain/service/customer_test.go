@@ -3,6 +3,7 @@ package service
 import (
 	"app/domain/errors"
 	"app/domain/model"
+	"app/domain/validator"
 	"fmt"
 	"strings"
 	"testing"
@@ -29,6 +30,20 @@ func (mk mockDBCustomer) CreateCustomer(custumer *model.Customer) error {
 
 func (mk mockDBCustomer) Get(custumer *model.Customer) (bool, error) {
 	return true, mk.err
+}
+
+func (mk mockDBCustomer) UpdateCustomer(customer *model.Customer) error {
+	return mk.err
+}
+
+func (mk mockDBCustomer) ListCustomer(q *validator.CustomerListRequest) (*[]model.Customer, error) {
+
+	return &[]model.Customer{}, nil
+}
+
+func (mk mockDBCustomer) CountCustomers() (int64, error) {
+
+	return int64(0), nil
 }
 
 var (
@@ -138,5 +153,47 @@ func TestCustomerService_read_ListDuplicatedCustomerError(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, c.Success, ci.Success)
 	assert.Equal(t, c.AlreadyExist, ci.AlreadyExist)
+
+}
+
+func TestCustomerService_UpdateCustomer(t *testing.T) {
+	
+	mock := mockDBCustomer{err: nil}
+
+	cs := CustomerService{
+		Repository: mock,
+	}
+
+	customer := &model.Customer{
+		ID: "1111",
+		Name: "test",
+		Salary: 100.10,
+	}
+
+	c, err := cs.UpdateCustomer("1111", customer)
+	
+	assert.Nil(t, err)
+	assert.Equal(t, c, customer)
+
+}
+
+func TestCustomerService_UpdateCustomer_DuplicatedCustomerError(t *testing.T) {
+	
+	mock := mockDBCustomer{err: errors.DuplicatedCustomerError}
+
+	cs := CustomerService{
+		Repository: mock,
+	}
+
+	customer := &model.Customer{
+		ID: "1111",
+		Name: "test",
+		Salary: 100.10,
+	}
+
+	_, err := cs.UpdateCustomer("1111", customer)
+	
+	assert.NotNil(t, err)
+	assert.Equal(t, err, errors.DuplicatedCustomerError)
 
 }

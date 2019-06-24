@@ -47,11 +47,21 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	alertRepository := repository.AlertRepository{
 		DB: db,
 	}
-	alertService := service.AlertService{
-		Repository: &alertRepository,
+	dasboardRepository := repository.DasboardRepository{
+		DB: db,
+	}
+	loginRepository := repository.LoginRepository{
+		DB: db,
 	}
 
 	// Services
+	dasboardService := service.DasboardService{
+		Repository:      dasboardRepository,
+		AlertRepository: alertRepository,
+	}
+	alertService := service.AlertService{
+		Repository: &alertRepository,
+	}
 	engineAlertService := engine.AlertService{
 		CustomerDB:   CustomerRepository,
 		AlertDB:      alertRepository,
@@ -71,8 +81,14 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 		Repository: userRepository,
 		Alert:      engineAlertService,
 	}
+	loginService := service.LoginService{
+		Repository: loginRepository,
+	}
 
 	// Controllers
+	dc := controller.DashboardController{
+		Dashboads: &dasboardService,
+	}
 	uc := controller.UserController{
 		Users: &userService,
 	}
@@ -85,6 +101,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	pac := controller.PublicAgentController{
 		PublicAgents: &publicAgentService,
 	}
+	lc := controller.LoginController{
+		Login: loginService,
+	}
 
 	// Users
 	router.GET("/", Index)
@@ -95,6 +114,9 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Customers
 	router.POST("/customers", cc.UploadCustomer)
+	router.POST("/customer", cc.CreateCustomer)
+	router.PUT("/customer/:customerId", cc.UpdateCustomer)
+	router.GET("/customers", cc.ListCustomer)
 
 	// Public Agents
 	router.GET("/webcrawler", pac.StartProcess)
@@ -102,6 +124,13 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 	// Alerts
 	router.GET("/alerts/:id", ac.GetAlert)
 	router.GET("/alerts", ac.ListAlerts)
+
+	// Dashboards
+	router.GET("/dashboard/alerts", dc.GetAlerts)
+	router.GET("/dashboard/customer", dc.ListCustomers)
+
+	// Login
+	router.POST("/auth", lc.Authorization)
 
 	return router
 }

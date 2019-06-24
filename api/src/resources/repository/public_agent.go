@@ -2,6 +2,7 @@ package repository
 
 import (
 	"app/domain/model"
+	"math"
 	"strings"
 
 	"github.com/go-xorm/xorm"
@@ -36,7 +37,7 @@ func (r PublicAgentRepository) CreateOrUpdatePublicAgent(publicAgent *model.Publ
 			publicAgent.ID = ePublicAgent.ID
 			updated := false
 			uPublicAgent := model.PublicAgent{Checked: publicAgent.Checked}
-			if ePublicAgent.Salary != publicAgent.Salary {
+			if round(ePublicAgent.Salary) != round(publicAgent.Salary) {
 				uPublicAgent.UpdatedAt = publicAgent.Checked
 				uPublicAgent.Salary = publicAgent.Salary
 				updated = true
@@ -49,4 +50,8 @@ func (r PublicAgentRepository) CreateOrUpdatePublicAgent(publicAgent *model.Publ
 	}
 
 	return true, nil
+}
+
+func round(f float64) float64 {
+	return math.Round(f*100) / 100
 }
