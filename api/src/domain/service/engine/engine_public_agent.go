@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"app/domain/builder"
 	"app/domain/model"
 	"log"
 )
@@ -30,6 +31,13 @@ func (eas AlertService) checkPublicAgent(publicAgent model.PublicAgent) {
 	}
 
 	if has {
+		if builder.Round(float64(customer.Salary)) != builder.Round(publicAgent.Salary) {
+			customer.Salary = float32(publicAgent.Salary)
+			if err = eas.CustomerDB.UpdateCustomer(&customer); err != nil {
+				return
+			}
+		}
+
 		if err = eas.createAlert(model.PublicAgentType, &customer, &publicAgent, nil); err != nil {
 			return
 		}

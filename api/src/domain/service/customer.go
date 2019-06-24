@@ -100,6 +100,7 @@ func (cs CustomerService) UpdateCustomer(id string, customer *model.Customer) (*
 		return nil, err
 	}
 
+	cs.Alert.Customers() <- *customer
 	return customer, nil
 }
 

@@ -52,7 +52,10 @@ var (
 	u chan model.User
 )
 
-func init() {
+type mockEngineAlert struct {
+}
+
+func (mea mockEngineAlert) Init() {
 	c = make(chan model.Customer)
 	p = make(chan model.PublicAgent)
 	u = make(chan model.User)
@@ -70,11 +73,6 @@ func init() {
 	}()
 }
 
-type mockEngineAlert struct {
-}
-
-func (mea mockEngineAlert) Init() {
-}
 func (mea mockEngineAlert) PublicAgents() chan model.PublicAgent {
 	return p
 }
@@ -94,17 +92,14 @@ func TestCustomerService_read(t *testing.T) {
 		Repository: mock,
 		Alert:      alert,
 	}
-	go func() {
-		c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
+	c, err := cs.read(strings.NewReader(fmt.Sprintf("customer 1\ncustomer 2\ncustomer 3")))
 
-		ci := model.CustomerInsert{
-			Success: 3,
-		}
+	ci := model.CustomerInsert{
+		Success: 3,
+	}
 
-		assert.Nil(t, err)
-		assert.Equal(t, c.Success, ci.Success)
-	}()
-
+	assert.Nil(t, err)
+	assert.Equal(t, c.Success, ci.Success)
 }
 
 func TestCustomerService_read_AllDuplicatedCustomerError(t *testing.T) {
@@ -157,43 +152,47 @@ func TestCustomerService_read_ListDuplicatedCustomerError(t *testing.T) {
 }
 
 func TestCustomerService_UpdateCustomer(t *testing.T) {
-	
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	mock := mockDBCustomer{err: nil}
 
 	cs := CustomerService{
 		Repository: mock,
+		Alert:      alert,
 	}
 
 	customer := &model.Customer{
-		ID: "1111",
-		Name: "test",
+		ID:     "1111",
+		Name:   "test",
 		Salary: 100.10,
 	}
 
 	c, err := cs.UpdateCustomer("1111", customer)
-	
+
 	assert.Nil(t, err)
 	assert.Equal(t, c, customer)
-
 }
 
 func TestCustomerService_UpdateCustomer_DuplicatedCustomerError(t *testing.T) {
-	
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	mock := mockDBCustomer{err: errors.DuplicatedCustomerError}
 
 	cs := CustomerService{
 		Repository: mock,
+		Alert:      alert,
 	}
 
 	customer := &model.Customer{
-		ID: "1111",
-		Name: "test",
+		ID:     "1111",
+		Name:   "test",
 		Salary: 100.10,
 	}
 
 	_, err := cs.UpdateCustomer("1111", customer)
-	
+
 	assert.NotNil(t, err)
 	assert.Equal(t, err, errors.DuplicatedCustomerError)
-
 }
