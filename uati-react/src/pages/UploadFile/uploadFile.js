@@ -1,53 +1,11 @@
 import React from 'react';
 import CSVReader from 'react-csv-reader'
 import Dropzone from 'react-dropzone';
-//import axios , { post } from 'axios';
 import './uploadFile.css'
 import Botao from '../../componentes/Botao/Botao';
   
-export default class uploadFile extends React.Component {
+class uploadFile extends React.Component {  
 
-    /*
-    http://bancouati.ga/api/customers
-    onDrop(files) {
-        this.setState({ files });
-        const file = files[0];
-        this.props.actions.uploadRequest({
-           file,
-           name: 'Customers'
-        })
-      }
-    
-    onDrop(files) {
-
-        this.setState({ files });
-
-        var file = files[0];
-
-        const reader = new FileReader();
-        reader.onload = () => {
-            csv.parse(reader.result, (err, data) => {
-
-                var userList = [];
-
-                for (var i = 0; i < data.length; i++) {
-                    const name = data[i][0];
-                    const newUser = { "name": name };
-                    userList.push(newUser);
-
-                    /*fetch('https://', {
-                      method: 'POST',
-                      headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(newUser)
-                    })
-                };
-            });
-        };
-        reader.readAsBinaryString(file);
-    }*/           
     render() {
         return (
             <div className="UploadFileContainer">
@@ -84,3 +42,4 @@ export default class uploadFile extends React.Component {
     }
 }
 
+export default uploadFile
