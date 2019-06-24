@@ -52,14 +52,14 @@ class AlertasInfo extends Component {
                                 </Label>
                                 <Label> Departamento: <p> {this.state.alerta.public_agent.department} </p>
                                 </Label>
-                                <Label> Salário: <p> {this.state.alerta.public_agent.salary} </p>
+                                <Label> Salário: <p> R$ {this.state.alerta.public_agent.salary} </p>
                                 </Label>
                             </fieldset>
 
-                            <div>
-                                <p> Usuários que receberam alerta: </p>
-                                <Table usuarios={this.state.alerta.users_received} length={this.state.alerta.users_received.length} paginacao="2" cabecalho={cabecalho} />                               
-                            </div>
+                            <fieldset>
+                                <legend className="legend"> Usuários que receberam alerta: </legend>
+                                <Table usuarios={this.state.alerta.users_received} length={this.state.alerta.users_received.length} paginacao="2" cabecalho={cabecalho} />
+                            </fieldset>
 
                             <div className="rigth">
                                 <Botao

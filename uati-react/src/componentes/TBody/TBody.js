@@ -15,7 +15,7 @@ const TBody = ({ alertas, usuarios }) => (
                         <Td>{alerta.datetime.substring(0,16).replace('T', ' ')}</Td>
                         <Td>
                             <Link className="link-mais_info" to={{
-                                pathname: `/${alerta.id}`,
+                                pathname: `/alertas/${alerta.id}`,
                                 state: {
                                     id: alerta.id
                                 }

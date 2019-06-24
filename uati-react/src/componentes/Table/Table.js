@@ -9,13 +9,18 @@ import './Table.css'
 function Table(props) {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(props.paginacao);
-  const { usuarios, setAlertas, paginacao, cabecalho, length, alertas } = props;
+  const { usuarios, setAlertas, paginacao, cabecalho, length, alertas, filtro } = props;
 
 
   useEffect(() => {
+    console.log('table filtro', filtro)
     apiAlerts.getAlerts()
       .then(response => {
         setAlertas(response.data.data.slice(start, end))
+        console.log(response.data.data.slice(start, end))
+        // console.log(response.data.data.filter(item => {
+        //   item.col
+        // }))
         //  setCarregando(false)
       })
       .catch(error => {
@@ -24,7 +29,7 @@ function Table(props) {
         }
       })
 
-  }, [setAlertas, start, end, paginacao, length])
+  }, [setAlertas, start, end, paginacao, length, filtro])
 
   //   useEffect(() => {
   //     if (filtro.length > 0) {
@@ -59,7 +64,7 @@ function Table(props) {
 
 
   return (
-    <table className="card table">
+    <table className="table">
       <THead cabecalho={cabecalho}> </THead>
       <TBody alertas={alertas} usuarios={usuarios}></TBody>
       <TFoot quantidade={Math.ceil(length / paginacao)} paginacao={paginacao} setEnd={setEnd} setStart={setStart}></TFoot>

@@ -1,0 +1,8 @@
+.card-ordenar{
+    display: flex;
+}
+
+input {
+    font-weight: normal;
+    margin: 0 5px;
+}

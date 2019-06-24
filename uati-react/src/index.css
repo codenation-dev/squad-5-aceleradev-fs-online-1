@@ -20,7 +20,8 @@ body {
 .card{
   background: white;
   box-shadow: 0 2px 10px -4px rgba(0,0,0,0.2);
-  padding: 20px;
+  /* min-height: 475px; */
+  padding: 20px 5px;
 }
 
 .app {

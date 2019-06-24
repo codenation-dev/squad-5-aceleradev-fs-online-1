@@ -1,9 +1,10 @@
 fieldset
 {
   border: #1BBF77 solid 1px;
-  max-width:500px;
+  /* max-width:500px; */
   padding:16px;	
-  margin: 0 auto;
+  margin: 20px auto;
+  width: 90%;
 }
 .legend
 {
