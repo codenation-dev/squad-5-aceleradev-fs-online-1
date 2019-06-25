@@ -1,0 +1,20 @@
+.column {
+    float: left;
+    width: 50%;
+  }
+  
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.table {
+    text-align: justify;
+    width: 100%;
+}
+
+tr {
+    display: flex;
+    align-items: center;
+}
