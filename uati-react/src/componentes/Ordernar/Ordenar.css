@@ -1,5 +1,8 @@
 .card-ordenar{
     display: flex;
+    align-items: baseline;
+    width: 100%;
+    justify-content: space-around;
 }
 
 input {

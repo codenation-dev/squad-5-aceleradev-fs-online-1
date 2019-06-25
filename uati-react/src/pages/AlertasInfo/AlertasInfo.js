@@ -63,7 +63,7 @@ class AlertasInfo extends Component {
 
                             <div className="rigth">
                                 <Botao
-                                    classe="button-paginacao"
+                                    classe="paginacao"
                                     click={() => {
                                         this.props.history.push('/alertas')
                                     }}>Voltar</Botao>

@@ -31,9 +31,7 @@ const TBody = ({ alertas, usuarios }) => (
                         <Td> {user.email} </Td>
                     </tr>
                 ))
-
-
-                : ''}
+                : <td></td>}
 
 
 

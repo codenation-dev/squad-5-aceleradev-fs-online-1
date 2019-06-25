@@ -8,9 +8,9 @@ function Alertas() {
   const [length, setLength] = useState(0)
   const usuarios = []
   const [alertas, setAlertas] = useState([])
-  const [filtro, setFiltro] = useState([])
+  const [filtro, setFiltro] = useState({})
   let [carregando, setCarregando] = useState(true)
-  let [lista, setLista] = useState([
+  const lista = [
     {
       name: 'Tipo',
       column: 'type'
@@ -23,7 +23,7 @@ function Alertas() {
       name: 'Data',
       column: 'datetime'
     }
-  ])
+  ]
   const paginacao = 10
   const cabecalho = [
     "Tipo",
@@ -52,7 +52,7 @@ useEffect(() => {
          {!carregando ?  
          <Fragment>
          <Ordenar lista={lista} setFiltro={setFiltro}></Ordenar>
-         <Table cabecalho={cabecalho} length={length} filtro={filtro} alertas={alertas} usuarios={usuarios} setAlertas={setAlertas} paginacao={paginacao}  />
+         <Table cabecalho={cabecalho} length={length} filtro={filtro} alertas={alertas} usuarios={usuarios} setAlertas={setAlertas} paginacao={paginacao} setLength={setLength} />
          </Fragment>
           : 'carregando...'}
        </section>

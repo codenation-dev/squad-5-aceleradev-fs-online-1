@@ -7,7 +7,7 @@ function Botao(props) {
     classes += " botao--desabilitado"
   }
 
-  if (props.classe==='paginacao') {
+  if (props.classe==="paginacao") {
     classes += "-paginacao"
   }
   
