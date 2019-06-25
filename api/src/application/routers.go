@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"app/application/controller"
+	"app/application/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -107,27 +108,32 @@ func NewRouter(db *xorm.Engine) *gin.Engine {
 
 	// Users
 	router.GET("/", Index)
-	router.POST("/users", uc.CreateUser)
-	router.GET("/users/:userId", uc.GetUser)
-	router.GET("/users", uc.ListUser)
-	router.PUT("/users/:userId", uc.UpdateUser)
 
-	// Customers
-	router.POST("/customers", cc.UploadCustomer)
-	router.POST("/customer", cc.CreateCustomer)
-	router.PUT("/customer/:customerId", cc.UpdateCustomer)
-	router.GET("/customers", cc.ListCustomer)
+	basicAuth := router.Group("/")
+	basicAuth.Use(middleware.AuthenticationRequired)
+	{
+		basicAuth.POST("/users", uc.CreateUser)
+		basicAuth.GET("/users/:userId", uc.GetUser)
+		basicAuth.GET("/users", uc.ListUser)
+		basicAuth.PUT("/users/:userId", uc.UpdateUser)
+
+		// Customers
+		basicAuth.POST("/customers", cc.UploadCustomer)
+		basicAuth.POST("/customer", cc.CreateCustomer)
+		basicAuth.PUT("/customer/:customerId", cc.UpdateCustomer)
+		basicAuth.GET("/customers", cc.ListCustomer)
+
+		// Alerts
+		basicAuth.GET("/alerts/:id", ac.GetAlert)
+		basicAuth.GET("/alerts", ac.ListAlerts)
+
+		// Dashboards
+		basicAuth.GET("/dashboard/alerts", dc.GetAlerts)
+		basicAuth.GET("/dashboard/customer", dc.ListCustomers)
+	}
 
 	// Public Agents
 	router.GET("/webcrawler", pac.StartProcess)
-
-	// Alerts
-	router.GET("/alerts/:id", ac.GetAlert)
-	router.GET("/alerts", ac.ListAlerts)
-
-	// Dashboards
-	router.GET("/dashboard/alerts", dc.GetAlerts)
-	router.GET("/dashboard/customer", dc.ListCustomers)
 
 	// Login
 	router.POST("/auth", lc.Authorization)

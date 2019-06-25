@@ -13,6 +13,6 @@ type CustomerCreation struct {
 
 // CustomerListRequest struct
 type CustomerListRequest struct {
-	Limit  int    `form:"limit" binding:"omitempty,max=50"`
-	Offset int    `form:"offset" binding:"omitempty"`
+	Limit  int `form:"limit" binding:"omitempty,max=50"`
+	Offset int `form:"offset" binding:"omitempty"`
 }

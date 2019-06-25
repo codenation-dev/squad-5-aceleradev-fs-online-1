@@ -1,55 +1,53 @@
 package controller
 
 import (
+	"app/domain/errors"
+	"app/domain/model"
+	"app/domain/validator"
+	"bytes"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"net/textproto"
-	"io"
 	"os"
-	"github.com/stretchr/testify/assert"
-	"bytes"
-	"mime/multipart"
-	"app/domain/validator"
-	"app/domain/errors"
-	"github.com/gin-gonic/gin"
-	"app/domain/model"
 	"testing"
-
 )
 
 type mockCustomer struct {
-	customer  *model.Customer
+	customer       *model.Customer
 	customerInsert *model.CustomerInsert
-	customerList *model.CustomerList
-	err   error
+	customerList   *model.CustomerList
+	err            error
 }
 
-func (mk mockCustomer) Parse(file multipart.File) (*model.CustomerInsert, error){
+func (mk mockCustomer) Parse(file multipart.File) (*model.CustomerInsert, error) {
 
 	return mk.customerInsert, mk.err
 }
 
-func (mk mockCustomer) CreateCustomer(customer *model.Customer) (*model.Customer, error){
+func (mk mockCustomer) CreateCustomer(customer *model.Customer) (*model.Customer, error) {
 
 	return mk.customer, mk.err
 }
 
-func (mk mockCustomer) UpdateCustomer(id string, customer *model.Customer) (*model.Customer, error){
+func (mk mockCustomer) UpdateCustomer(id string, customer *model.Customer) (*model.Customer, error) {
 	mk.customer.ID = id
 	return mk.customer, mk.err
 }
 
-func (mk mockCustomer) ListCustomer(q *validator.CustomerListRequest) (*model.CustomerList, error){
+func (mk mockCustomer) ListCustomer(q *validator.CustomerListRequest) (*model.CustomerList, error) {
 
 	return mk.customerList, mk.err
 }
-
 
 func TestCustomerController_UploadCustomer(t *testing.T) {
 
 	mock := mockCustomer{
 		customerInsert: &model.CustomerInsert{
-			Success: 1,
+			Success:      1,
 			AlreadyExist: 0,
 		},
 		err: nil,
@@ -73,8 +71,8 @@ func TestCustomerController_UploadCustomer(t *testing.T) {
 	writer := multipart.NewWriter(body)
 
 	h := make(textproto.MIMEHeader)
-    h.Set("Content-Disposition",`form-data; name=file; filename="clintes.csv"`)       
-    h.Set("Content-Type", "text/csv")
+	h.Set("Content-Disposition", `form-data; name=file; filename="clintes.csv"`)
+	h.Set("Content-Type", "text/csv")
 
 	part, err := writer.CreatePart(h)
 	assert.Nil(t, err)
@@ -94,12 +92,12 @@ func TestCustomerController_UploadCustomer(t *testing.T) {
 	assert.Equal(t, "{\"success\":1,\"alreadyExist\":0}", w.Body.String())
 }
 
-func TestCustomerController_CreateCustomer(t *testing.T){
+func TestCustomerController_CreateCustomer(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: &model.Customer{
-			ID: "1111",
-			Name: "test",
+			ID:     "1111",
+			Name:   "test",
 			Salary: 1111.11,
 		},
 		err: nil,
@@ -126,11 +124,11 @@ func TestCustomerController_CreateCustomer(t *testing.T){
 
 }
 
-func TestCustomerController_CreateCustomer_DuplicatedCustomerError(t *testing.T){
+func TestCustomerController_CreateCustomer_DuplicatedCustomerError(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: nil,
-		err: errors.DuplicatedCustomerError,
+		err:      errors.DuplicatedCustomerError,
 	}
 
 	cc := CustomerController{mock}
@@ -154,11 +152,11 @@ func TestCustomerController_CreateCustomer_DuplicatedCustomerError(t *testing.T)
 
 }
 
-func TestCustomerController_CreateCustomer_ValidationErrorCustomerName(t *testing.T){
+func TestCustomerController_CreateCustomer_ValidationErrorCustomerName(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: nil,
-		err: nil,
+		err:      nil,
 	}
 
 	cc := CustomerController{mock}
@@ -182,11 +180,11 @@ func TestCustomerController_CreateCustomer_ValidationErrorCustomerName(t *testin
 
 }
 
-func TestCustomerController_CreateCustomer_ValidationErrorCustomerSalary(t *testing.T){
+func TestCustomerController_CreateCustomer_ValidationErrorCustomerSalary(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: nil,
-		err: nil,
+		err:      nil,
 	}
 
 	cc := CustomerController{mock}
@@ -210,12 +208,12 @@ func TestCustomerController_CreateCustomer_ValidationErrorCustomerSalary(t *test
 
 }
 
-func TestCustomerController_UpdateCustomer(t *testing.T){
+func TestCustomerController_UpdateCustomer(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: &model.Customer{
-			ID: "1111",
-			Name: "test",
+			ID:     "1111",
+			Name:   "test",
 			Salary: 1111.11,
 		},
 		err: nil,
@@ -244,12 +242,12 @@ func TestCustomerController_UpdateCustomer(t *testing.T){
 
 }
 
-func TestCustomerController_UpdateCustomer_ValidationErrorCustomerName(t *testing.T){
+func TestCustomerController_UpdateCustomer_ValidationErrorCustomerName(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: &model.Customer{
-			ID: "1111",
-			Name: "test",
+			ID:     "1111",
+			Name:   "test",
 			Salary: 1111.11,
 		},
 		err: nil,
@@ -278,12 +276,12 @@ func TestCustomerController_UpdateCustomer_ValidationErrorCustomerName(t *testin
 
 }
 
-func TestCustomerController_UpdateCustomer_ValidationErrorCustomerSalary(t *testing.T){
+func TestCustomerController_UpdateCustomer_ValidationErrorCustomerSalary(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: &model.Customer{
-			ID: "1111",
-			Name: "test",
+			ID:     "1111",
+			Name:   "test",
 			Salary: 1111.11,
 		},
 		err: nil,
@@ -312,12 +310,12 @@ func TestCustomerController_UpdateCustomer_ValidationErrorCustomerSalary(t *test
 
 }
 
-func TestCustomerController_UpdateCustomer_DuplicatedCustomerError(t *testing.T){
+func TestCustomerController_UpdateCustomer_DuplicatedCustomerError(t *testing.T) {
 
 	mock := mockCustomer{
 		customer: &model.Customer{
-			ID: "1111",
-			Name: "test",
+			ID:     "1111",
+			Name:   "test",
 			Salary: 1111.11,
 		},
 		err: errors.DuplicatedCustomerError,
@@ -346,17 +344,17 @@ func TestCustomerController_UpdateCustomer_DuplicatedCustomerError(t *testing.T)
 
 }
 
-func TestCustomerController_ListCustomer(t *testing.T){
+func TestCustomerController_ListCustomer(t *testing.T) {
 
 	cl := []model.Customer{model.Customer{
-		ID: "1111",
-		Name: "test",
+		ID:     "1111",
+		Name:   "test",
 		Salary: 1111.11,
 	}}
 
 	mock := mockCustomer{
 		customerList: &model.CustomerList{
-			Data: cl,
+			Data:    cl,
 			Records: int64(1),
 		},
 		err: nil,

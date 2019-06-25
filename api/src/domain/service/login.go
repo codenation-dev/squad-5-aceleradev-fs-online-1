@@ -5,9 +5,12 @@ import (
 	"app/domain/model"
 	"app/domain/validator"
 	"app/resources/repository"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
+
+const expiresTime = 3600000000000 // Uma hora de validade
 
 // Logins interfece
 type Logins interface {
@@ -19,6 +22,7 @@ type LoginService struct {
 	Repository repository.LoginDB
 }
 
+// Authorization valida usuário e senha e gera token JWT
 func (ls LoginService) Authorization(q validator.Login) (*model.Token, error) {
 
 	err := ls.Repository.Authorization(q)
@@ -27,7 +31,10 @@ func (ls LoginService) Authorization(q validator.Login) (*model.Token, error) {
 		return nil, err
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{})
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.StandardClaims{
+		ExpiresAt: time.Now().Unix() + expiresTime,
+		Id:        q.Username,
+	})
 
 	tokenString, err := token.SignedString([]byte(jwtConfig.Secret))
 

@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"app/domain/model"
-	"testing"
-	"app/domain/validator"
 	"app/domain/errors"
+	"app/domain/model"
+	"app/domain/validator"
 	"bytes"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -15,20 +15,19 @@ import (
 
 type mockLogin struct {
 	token *model.Token
-	err error
+	err   error
 }
 
-func (mk mockLogin) Authorization(q validator.Login) (*model.Token, error){
+func (mk mockLogin) Authorization(q validator.Login) (*model.Token, error) {
 
 	return mk.token, mk.err
 }
-
 
 func TestLoginController_Authorization(t *testing.T) {
 
 	mock := mockLogin{
 		token: &model.Token{
-			Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
+			Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
 		},
 		err: nil,
 	}
@@ -58,7 +57,7 @@ func TestLoginController_Authorization_ValidationErrorLoginPass(t *testing.T) {
 
 	mock := mockLogin{
 		token: &model.Token{
-			Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
+			Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
 		},
 		err: nil,
 	}
@@ -88,7 +87,7 @@ func TestLoginController_Authorization_ValidationErrorLoginName(t *testing.T) {
 
 	mock := mockLogin{
 		token: &model.Token{
-			Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
+			Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
 		},
 		err: nil,
 	}
@@ -118,7 +117,7 @@ func TestLoginController_Authorization_AuthorizationError(t *testing.T) {
 
 	mock := mockLogin{
 		token: nil,
-		err: errors.AuthorizationError,
+		err:   errors.AuthorizationError,
 	}
 
 	lc := LoginController{mock}

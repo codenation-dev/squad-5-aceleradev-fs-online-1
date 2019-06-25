@@ -14,6 +14,7 @@ type LoginController struct {
 	Login service.Logins
 }
 
+// Authorization controller que valida o login do usuário
 func (lc LoginController) Authorization(c *gin.Context) {
 
 	var q validator.Login

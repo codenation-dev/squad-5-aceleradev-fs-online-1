@@ -1,9 +1,9 @@
 package repository
 
 import (
+	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
-	"app/domain/errors"
 	"testing"
 
 	"github.com/go-xorm/xorm"
