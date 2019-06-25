@@ -16,6 +16,7 @@ function Table(props) {
         apiAlerts.getAlerts()
           .then(response => {
             setAlertas(response.data.data.slice(start, end))
+            setLength(response.data.data.length)
           })
               .catch(error => {
                 if (error.response) {
