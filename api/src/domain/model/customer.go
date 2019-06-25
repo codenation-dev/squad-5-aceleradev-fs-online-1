@@ -15,8 +15,8 @@ type Customer struct {
 
 // CustomerList struct
 type CustomerList struct {
-	Records int64
-	Data    []Customer
+	Records int64 `json:"records"`
+	Data    []Customer `json:"data"`
 }
 
 // CustomerInsert struct
