@@ -1,72 +1,57 @@
 import React from 'react';
-import CSVReader from 'react-csv-reader'
 import Dropzone from 'react-dropzone';
-import csv from 'csv';
 
 import './uploadFile.css'
 import Botao from '../../componentes/Botao/Botao';
+import  * as api from '../../apis/customer';
 
 export default class uploadFile extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
     onDrop(files) {
 
-        this.setState({ files });
+        this.setState({file: files[0]})
 
-        var file = files[0];
-
-        const reader = new FileReader();
-        reader.onload = () => {
-            csv.parse(reader.result, (err, data) => {
-
-                var userList = [];
-
-                for (var i = 0; i < data.length; i++) {
-                    const name = data[i][0];
-                    const newUser = { "name": name };
-                    userList.push(newUser);
-
-                    /*fetch('https://', {
-                      method: 'POST',
-                      headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(newUser)
-                    })*/
-                };
-            });
-        };
-        reader.readAsBinaryString(file);
     }
+
+    async uploadFile(e) {
+        e.preventDefault();
+        try {
+            await api.upload(this.state.file);
+            alert("Clientes importados com sucesso!");
+        } catch (e) {
+            alert(e.response.data[0].message);
+        }
+    }
+
     render() {
         return (
             <div className="UploadFileContainer">
                 <div className="UploadFileBox">
                     <div className="Fields">
                         <center>
-                            <h1 className="UploadFileTitle">Envio de arquivos</h1>
-                            <CSVReader
-                                cssClass="csv-reader-input"
-                                onFileLoaded={this.handleForce}
-                                onError={this.handleDarkSideForce}
-                                inputId="Upload"
-                                inputStyle={{ color: 'red' }}
-                            />
-                            <br />
+                            <form onSubmit={this.uploadFile.bind(this)}>
+                                <h1 className="UploadFileTitle">Envio de arquivos</h1>
+                                <br />
 
-                            <div className="Dropzone">
-                                <Dropzone
-                                    accept=".csv"
-                                    onDropAccepted={this.onDrop.bind(this)}
-                                >
-                                    <div>
-                                        <h1 className="DropFile"> Try dropping some files here, or click to select files to upload.</h1>
-                                    </div>
-                                </Dropzone>
-                            </div>
+                                <div className="Dropzone">
+                                    <Dropzone
+                                        accept=".csv"
+                                        onDrop={this.onDrop}
+                                        onDropAccepted={this.onDrop.bind(this)}
+                                    >
+                                        <div>
+                                            <h1 className="DropFile"> {this.state.file ? this.state.file.name : "Solte o arquivo csv aqui ou click para selecionar."}</h1>
+                                        </div>
+                                    </Dropzone>
+                                </div>
 
-                            <div className="Upload">
-                                <Botao> Enviar </Botao>
-                            </div>
+                                <div className="Upload">
+                                    <Botao> Enviar </Botao>
+                                </div>
+                            </form>
                         </center>
                     </div>
                 </div>
