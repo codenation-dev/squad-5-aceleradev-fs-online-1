@@ -16,3 +16,18 @@
   background: lightgrey;
   border-color: lightgrey;
 }
+
+button {
+  font-family: 'Rajdhani', sans-serif;  
+}
+
+.botao-paginacao {
+  margin: 10px 5px 0 5px;
+  border: none;
+  color: #1BBF77;
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+

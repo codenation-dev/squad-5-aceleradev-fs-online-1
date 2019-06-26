@@ -1,0 +1,11 @@
+.card-ordenar{
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+    justify-content: space-around;
+}
+
+input {
+    font-weight: normal;
+    margin: 0 5px;
+}

@@ -1,0 +1,26 @@
+.link-mais_info {
+    background-color: #1BBF77;
+    padding: 4px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 12px;
+    float: right;
+    text-align: center;
+    width: 100%;
+}
+a:link 
+{ 
+text-decoration:none; 
+}
+
+input {
+        width: 100%;
+}
+
+.input {
+    border: none;
+    width: 100%;
+}
+
+

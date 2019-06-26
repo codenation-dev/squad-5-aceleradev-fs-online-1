@@ -12,7 +12,8 @@ class Conta extends Component {
     super(props)
 
     this.nomeRef = React.createRef()
-    this.userRef = React.createRef()
+  //  this.userRef = React.createRef()
+    this.usuarioRef = React.createRef()
     this.emailRef = React.createRef()
     this.senhaRef = React.createRef()
 
@@ -21,22 +22,23 @@ class Conta extends Component {
 
   habilitaOuDesabilita = () => {
     const campoNome = this.nomeRef.current
-    const campoUser = this.userRef.current
+    const campoUsuario = this.usuarioRef.current
     const campoEmail = this.emailRef.current
     const campoSenha = this.senhaRef.current
-
-    if (campoNome.temErro() || campoUser.temErro() || campoEmail.temErro() || campoSenha.temErro()) {
+    
+    if (campoNome.temErro() || campoUsuario.temErro() || campoEmail.temErro() || campoSenha.temErro()) {
       this.setState({ desabilitado: true })
     } else {
       this.setState({ desabilitado: false })
     }
-  }
+  
+}
 
   cadastrar = async (e) => {
     e.preventDefault();
 
     const campoNome = this.nomeRef.current
-    const campoUser = this.userRef.current
+    const campoUser = this.usuarioRef.current
     const campoEmail = this.emailRef.current
     const campoSenha = this.senhaRef.current
 
@@ -70,8 +72,10 @@ class Conta extends Component {
         <Legenda htmlFor="nome">Nome:</Legenda>
         <Campo ref={this.nomeRef} id="nome" type="text" name="nome" placeholder="Nome" required minLength={10} onChange={this.habilitaOuDesabilita} />
         
-        <Legenda htmlFor="username">Usuário:</Legenda>
-        <Campo ref={this.userRef} id="username" type="text" name="username" placeholder="Usuário" required onChange={this.habilitaOuDesabilita} />
+        {/* <Legenda htmlFor="username">Usuário:</Legenda>
+        <Campo ref={this.userRef} id="username" type="text" name="username" placeholder="Usuário" required onChange={this.habilitaOuDesabilita} /> */}
+        <Legenda htmlFor="usuario">Usuário:</Legenda>
+        <Campo ref={this.usuarioRef} id="usuario" type="tel" name="telefone" placeholder="Telefone" required onChange={this.habilitaOuDesabilita} />
         
         <Legenda htmlFor="email">Email:</Legenda>
         <Campo ref={this.emailRef} id="email" type="email" name="email" placeholder="Email" required onChange={this.habilitaOuDesabilita} />

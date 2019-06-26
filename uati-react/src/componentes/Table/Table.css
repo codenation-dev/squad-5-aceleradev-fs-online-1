@@ -1,0 +1,11 @@
+.table {
+    text-align: justify;
+    width: 100%;
+    padding: 20px;
+    /* min-height: 473px; */
+}
+
+tr {
+    display: flex;
+    align-items: center;
+}
