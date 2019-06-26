@@ -3,8 +3,6 @@ package controller
 import (
 	"app/domain/model"
 	"app/domain/service"
-	"app/domain/validator"
-	"app/resources/repository"
 	"app/resources/sendemail"
 	"log"
 
@@ -44,9 +42,10 @@ func InitSendEmail(db *xorm.Engine) {
 
 		for {
 			e, _ := <-emailChannel
-			e.Recipients = getAllUserEmail(db)
-			ec.Send(e)
-			log.Println(e)
+			err := ec.Send(e)
+			if err != nil {
+				log.Println("Send Email Error: ", err)
+			}
 		}
 
 	}(EmailChannel)
@@ -56,29 +55,8 @@ func InitSendEmail(db *xorm.Engine) {
 func newEmailController() *EmailController {
 
 	ce := sendemail.ClientEmail{}
-	se := service.EmailService{ce}
+	se := service.EmailService{Client: ce}
 	ec := EmailController{se}
 	return &ec
 
-}
-
-func getAllUserEmail(db *xorm.Engine) []string {
-
-	ur := repository.UserRepository{
-		DB: db,
-	}
-	us := service.UserService{
-		Repository: ur,
-	}
-
-	q := &validator.UserListRequest{Limit: -1}
-
-	users, _ := us.ListUsers(q)
-
-	var emails []string
-
-	for _, u := range users.Data {
-		emails = append(emails, u.Email)
-	}
-	return emails
 }

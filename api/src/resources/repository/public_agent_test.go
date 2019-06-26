@@ -39,8 +39,9 @@ func TestPublicAgentRepository_CreateOrUpdatePublicAgent(t *testing.T) {
 		UpdatedAt:  now,
 	}
 
-	err := uRepo.CreateOrUpdatePublicAgent(&newPublicAgent)
+	updated, err := uRepo.CreateOrUpdatePublicAgent(&newPublicAgent)
 	assert.Nil(t, err)
+	assert.True(t, updated)
 
 	publicAgent := model.PublicAgent{}
 	ok, err := uRepo.DB.ID(newPublicAgent.ID).Get(&publicAgent)

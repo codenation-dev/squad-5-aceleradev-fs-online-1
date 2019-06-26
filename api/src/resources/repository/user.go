@@ -4,7 +4,6 @@ import (
 	"app/domain/errors"
 	"app/domain/model"
 	"app/domain/validator"
-	"fmt"
 	"strings"
 
 	"github.com/go-xorm/xorm"
@@ -13,6 +12,7 @@ import (
 // UserDB interface
 type UserDB interface {
 	GetUser(id string) (*model.User, error)
+	Get(user *model.User) (bool, error)
 	CreateUser(user *model.User) error
 	ListUser(q *validator.UserListRequest) (*[]model.User, error)
 	CountUsers(q *validator.UserListRequest) (int64, error)
@@ -35,6 +35,11 @@ func (r UserRepository) GetUser(id string) (*model.User, error) {
 	return &user, nil
 }
 
+// Get Recupera um User
+func (r UserRepository) Get(user *model.User) (bool, error) {
+	return r.DB.Get(user)
+}
+
 // CreateUser cria um novo usuário
 func (r UserRepository) CreateUser(user *model.User) error {
 	_, err := r.DB.InsertOne(user)
@@ -53,7 +58,6 @@ func (r UserRepository) ListUser(q *validator.UserListRequest) (*[]model.User, e
 	if q.Limit == 0 {
 		q.Limit = 20
 	}
-	fmt.Printf("\n%#v\n", *q)
 
 	if err := addFilters(q, r.DB).Limit(q.Limit, q.Offset).Find(&users); err != nil {
 		return nil, err

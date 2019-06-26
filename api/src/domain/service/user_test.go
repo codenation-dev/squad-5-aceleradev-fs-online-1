@@ -18,6 +18,11 @@ type mockDBUser struct {
 func (m mockDBUser) GetUser(id string) (*model.User, error) {
 	return m.user, m.err
 }
+
+func (m mockDBUser) Get(user *model.User) (bool, error) {
+	return true, m.err
+}
+
 func (m mockDBUser) CreateUser(user *model.User) error {
 	return m.err
 }
@@ -35,6 +40,9 @@ func (m mockDBUser) UpdateUser(u *model.User) error {
 }
 
 func TestUserService_ListUsers(t *testing.T) {
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	mock := mockDBUser{
 		user: &model.User{
 			ID:       "12345678901234567890123456",
@@ -46,7 +54,10 @@ func TestUserService_ListUsers(t *testing.T) {
 		err:   nil,
 		count: 1,
 	}
-	us := UserService{mock}
+	us := UserService{
+		Repository: mock,
+		Alert:      alert,
+	}
 
 	q := validator.UserListRequest{}
 
@@ -57,12 +68,18 @@ func TestUserService_ListUsers(t *testing.T) {
 }
 
 func TestUserService_ListUsers_ErrorList(t *testing.T) {
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	mock := mockDBUser{
 		user:  nil,
 		err:   errors.New("generic error"),
 		count: 1,
 	}
-	us := UserService{mock}
+	us := UserService{
+		Repository: mock,
+		Alert:      alert,
+	}
 
 	q := validator.UserListRequest{}
 
@@ -72,6 +89,9 @@ func TestUserService_ListUsers_ErrorList(t *testing.T) {
 }
 
 func TestUserService_UpdateUser(t *testing.T) {
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	user := model.User{
 		ID:       "12345678901234567890123456",
 		Username: "test",
@@ -84,7 +104,10 @@ func TestUserService_UpdateUser(t *testing.T) {
 		err:   nil,
 		count: 1,
 	}
-	us := UserService{mock}
+	us := UserService{
+		Repository: mock,
+		Alert:      alert,
+	}
 
 	uc := validator.UserCreation{
 		Username: "test",
@@ -93,12 +116,17 @@ func TestUserService_UpdateUser(t *testing.T) {
 		Email:    "test@mail.com",
 	}
 
-	u, err := us.UpdateUser(user.ID, &uc)
-	assert.Nil(t, err)
-	assert.Equal(t, u, &user)
+	go func() {
+		u, err := us.UpdateUser(user.ID, &uc)
+		assert.Nil(t, err)
+		assert.Equal(t, u, &user)
+	}()
 }
 
 func TestUserService_CreateUser(t *testing.T) {
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	user := model.User{
 		ID:       "12345678901234567890123456",
 		Username: "test",
@@ -111,7 +139,10 @@ func TestUserService_CreateUser(t *testing.T) {
 		err:   nil,
 		count: 1,
 	}
-	us := UserService{mock}
+	us := UserService{
+		Repository: mock,
+		Alert:      alert,
+	}
 
 	uc := validator.UserCreation{
 		Username: "test",
@@ -120,13 +151,18 @@ func TestUserService_CreateUser(t *testing.T) {
 		Email:    "test@mail.com",
 	}
 
-	u, err := us.CreateUser(&uc)
-	assert.Nil(t, err)
-	user.ID = u.ID
-	assert.Equal(t, u, &user)
+	go func() {
+		u, err := us.CreateUser(&uc)
+		assert.Nil(t, err)
+		user.ID = u.ID
+		assert.Equal(t, u, &user)
+	}()
 }
 
 func TestUserService_GetUser(t *testing.T) {
+	alert := mockEngineAlert{}
+	alert.Init()
+
 	user := model.User{
 		ID:       "12345678901234567890123456",
 		Username: "test",
@@ -139,7 +175,10 @@ func TestUserService_GetUser(t *testing.T) {
 		err:   nil,
 		count: 1,
 	}
-	us := UserService{mock}
+	us := UserService{
+		Repository: mock,
+		Alert:      alert,
+	}
 
 	u, err := us.GetUser("12345678901234567890123456")
 	assert.Nil(t, err)

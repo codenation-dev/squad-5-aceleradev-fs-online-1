@@ -11,6 +11,9 @@ services:
       - "5000:5000"
     volumes: 
       - ./api/src:/go/src/app
+    environment:
+      EMAIL_DISABLED: "true"
+      JWT_DISABLED: "true"
   swagger-ui:
     image: swaggerapi/swagger-ui
     restart: always

@@ -15,6 +15,8 @@ func RunMigrations(db *xorm.Engine) {
 		new(model.User),
 		new(model.Customer),
 		new(model.PublicAgent),
+		new(model.Alert),
+		new(model.AlertUser),
 	)
 
 	if err != nil {
