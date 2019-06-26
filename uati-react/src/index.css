@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Rajdhani:500');
+
+* {
+  box-sizing: border-box
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -9,14 +14,20 @@ body {
 }
 
 .menu {
-  background: #2A8077
+  background: #2A8077;
+  font-size: 18px;
 }
 
 .menu ul {
-  padding:0px;
-  margin:0px auto;
-  width: 385px;
+  padding: 10px;
+  margin: 0px auto;
+  width: 700px;
   list-style:none;
+  height: 50px;
+}
+
+li {
+  margin: 0 5px;
 }
 
 .menu ul li { display: inline; }
@@ -35,18 +46,18 @@ body {
 }
 
 .container{
-  width: 860px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  max-width: calc(100% - 20px) ;
+  /* max-width: calc(100% - 20px) ; */
 }
 
 .card{
   background: white;
   box-shadow: 0 2px 10px -4px rgba(0,0,0,0.2);
   /* min-height: 475px; */
-  padding: 20px 5px;
+  padding: 0 5px 20px 5px;
 }
 
 .app {
@@ -54,8 +65,11 @@ body {
 }
 
 .menu ul li a:hover,.menu ul li a.selected {
-  background-color:#D6D6D6;
-  color: #6D6D6D;
-  border-bottom:3px solid #2A8077;
-  border-top:3px solid #2A8077;
+  background-color: #1BBF77;
+  border-bottom: 3px solid #2A8077;
+  border-top: 3px solid #2A8077;
+}
+
+a, a:link, a:hover, a:visited {
+  color: #1BBF77;
 }

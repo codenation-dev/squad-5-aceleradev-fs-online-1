@@ -1,9 +1,9 @@
 .link-mais_info {
-    background-color: #1BBF77;
+    background-color: #2A8077;
     padding: 4px;
     border: none;
     border-radius: 5px;
-    color: white;
+    color: white !important;
     font-size: 12px;
     float: right;
     text-align: center;

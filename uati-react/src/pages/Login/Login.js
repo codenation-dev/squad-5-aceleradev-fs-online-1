@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {withRouter} from 'react-router-dom';
 import Link from '../../componentes/Link/Link'
 import Botao from '../../componentes/Botao/Botao'
 import Legenda from '../../componentes/Legenda/Legenda'
@@ -29,12 +30,14 @@ class Login extends Component {
 
     try {
       await api.post("auth", dados)
+      .then(res => localStorage.setItem('TOKEN', res.data.token))
     } catch (e) {
       alert("Usuário e senha inválido")
       return
     }
 
-    this.props.history.push('/dashboard')
+    this.props.history.push('/')
+
   }
 
   habilitaOuDesabilitaBotao = () => {
@@ -74,4 +77,4 @@ class Login extends Component {
   }
 }
 
-export default Login
+export default withRouter(Login)

@@ -10,6 +10,10 @@ function Botao(props) {
   if (props.classe==="paginacao") {
     classes += "-paginacao"
   }
+
+  if (props.classe==="clientes") {
+    classes += "-clientes"
+  }
   
   return (
     <button className={classes} disabled={props.desabilitado} onClick={props.click}>

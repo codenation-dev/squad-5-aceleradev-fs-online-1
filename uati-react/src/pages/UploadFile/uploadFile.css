@@ -1,10 +1,11 @@
 .UploadFileContainer{
-    width: 100vw;
     height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    background-color: white;
+    height: 600px;
 }
   
 .csv-input {

@@ -3,13 +3,17 @@ import './clientes.css';
 import * as apiClientes from '../../apis/clientes'
 import Table from '../../componentes/Table/Table'
 import Ordenar from '../../componentes/Ordernar/Ordenar'
-import FormClientes from '../../componentes/FormClientes/FormClientes';
+import FormClientes from '../../componentes/FormClientes/FormClientes'
+import Navbar from '../../componentes/Navbar/Navbar'
+import { estAutenticado } from '../../routes'
+import Botao from '../../componentes/Botao/Botao';
 
 function Clientes() {
   const [length, setLength] = useState(0)
   const [clientes, setClientes] = useState([])
   const [filtro, setFiltro] = useState({})
-  let [carregando, setCarregando] = useState(true)
+  const [cadastrar, setCadastrar] = useState(false)
+  const [filtrar, setFiltrar] = useState(false)
   const lista = [
     {
       name: 'Nome',
@@ -18,19 +22,19 @@ function Clientes() {
     {
       name: 'Salário',
       column: 'salary'
-    }    
+    }
   ]
   const paginacao = 10
   const cabecalho = [
     "Nome",
     "Salário",
-    ""
+    "Ações"
   ]
- 
 
-useEffect(() => {
+
+  useEffect(() => {
     apiClientes.getCustomers()
-    .then(response => {
+      .then(response => {
         setLength(response.data.data.length)
         //setCarregando(false)
       })
@@ -41,18 +45,35 @@ useEffect(() => {
       })
   }, [])
 
-  return (    
-    <div className="container">
-      <section className="card">
-         {/* {!carregando ?   */}
-         <Fragment>
-         <FormClientes></FormClientes>
-         <Ordenar lista={lista} setFiltro={setFiltro}></Ordenar>
-         <Table cabecalho={cabecalho} length={length} filtro={filtro} clientes={clientes} setClientes={setClientes} paginacao={paginacao} setLength={setLength} />
-         </Fragment>
+  return (
+    <>
+      {estAutenticado() ? <Navbar></Navbar> : ''}
+      <div className="container">
+        <section className="card">
+          {/* {!carregando ?   */}
+          <Fragment>
+            <div className="buttons">
+              <Botao
+                classe="clientes"
+                click={() => {
+                  setFiltrar(true)
+                  setCadastrar(false)
+                }}>Pesquisar</Botao>
+              <Botao
+                classe="clientes"
+                click={() => {
+                  setFiltrar(false)
+                  setCadastrar(true)
+                }}>Cadastrar</Botao>
+            </div>
+            {cadastrar ? <FormClientes></FormClientes> : ''}
+            {filtrar ? <Ordenar lista={lista} setFiltro={setFiltro}></Ordenar> : ''}
+            <Table cabecalho={cabecalho} length={length} filtro={filtro} clientes={clientes} setClientes={setClientes} paginacao={paginacao} setLength={setLength} />
+          </Fragment>
           {/* : 'carregando...'} */}
-       </section>
-    </div>
+        </section>
+      </div>
+    </>
   )
 }
 

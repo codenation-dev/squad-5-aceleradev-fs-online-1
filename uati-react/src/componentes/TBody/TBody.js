@@ -28,16 +28,14 @@ class TBody extends React.Component {
             }
             apiClientes.putCustomer(cliente.id, payload)
                 .then(response => {
-                    console.log(response)
+                  //  console.log(response)
                 })
         }
         this.props.setEdit(false)
-
-
     }
 
     render() {
-        const { alertas, clientes } = this.props
+        const { alertas, clientes, usuarios } = this.props
         return (
             <tbody>
 
@@ -58,7 +56,7 @@ class TBody extends React.Component {
                                 </Td>
                             </tr>
                         )
-                    }) : <tr></tr>}
+                    }) : null}
 
                 {clientes ?
                     clientes.map(cliente => (
@@ -82,13 +80,22 @@ class TBody extends React.Component {
                                     onChange={(e) => this.setState({ salary: e.target.value })}>
                                 </input>
                             </Td>
-                            <Td> <Botao classe='paginacao' click={this.props.edit ? () => this.salvar(cliente) : this.editar}> {this.state.editar ? 'Salvar' : 'Editar'} </Botao> </Td>
-
+                            <Td classe="column-clientes"> <Botao classe='paginacao' click={this.props.edit ? () => this.salvar(cliente) : this.editar}> {this.props.edit ? 'Salvar' : 'Editar'} </Botao> </Td>
 
                         </tr>
-                    )) : <tr></tr>
+                    )) : null
                 }
 
+                {usuarios ? usuarios.map(user => {
+                    return (
+                        <tr key={user.id}>
+                            <Td classe="column" >{user.username}</Td>
+                            <Td classe="column" >{user.name}</Td>
+                            <Td classe="column" >{user.email}</Td>
+                        </tr>
+                    )
+                })
+                : null }
             </tbody>
         )
     }

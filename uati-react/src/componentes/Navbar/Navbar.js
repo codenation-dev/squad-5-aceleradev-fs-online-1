@@ -1,27 +1,26 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { deslogaUsuario } from '../../redux/actions'
-import { Link } from 'react-router-dom'
-import Menu from '../Menu/Menu'
-import logo from './logo.png'
-import './Navbar.css'
+import { NavLink } from 'react-router-dom';
 
-function Navbar(props) {
-  return (
-    <header className="navbar">
-      <Link to="/">
-        <img className="navbar__logo" src={logo} alt="Logo" />
-      </Link>
-
-      <Menu usuario={props.usuario} deslogaUsuario={props.deslogaUsuario} />
-    </header>
-  )
-}
-
-export default withRouter(
-  connect(
-    ({ usuario }) => ({ usuario }), 
-    { deslogaUsuario }
-  )(Navbar)
+const Navbar = () => (
+    <nav className="menu">
+        <ul className="nav nav-pills">
+            <li role="presentation">
+                <NavLink to="/dashboard" activeClassName="selected">Dashboard</NavLink>
+            </li>
+            <li role="presentation">
+                <NavLink to="/upload" activeClassName="selected">Upload de Clientes</NavLink>
+            </li>
+            <li role="presentation">
+                <NavLink to="/alertas" activeClassName="selected">Alertas</NavLink>
+            </li>
+            <li role="presentation">
+                <NavLink to="/clientes" activeClassName="selected">Clientes</NavLink>
+            </li>
+            <li role="presentation">
+                <NavLink to="/clientes" onClick={() => localStorage.removeItem('TOKEN')} activeClassName="selected"> Logout </NavLink>
+            </li>
+            
+        </ul>
+    </nav>
 )
+export default Navbar

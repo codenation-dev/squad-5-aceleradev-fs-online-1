@@ -10,7 +10,7 @@ function Table(props) {
   const [start, setStart] = useState(0);
   const [edit, setEdit] = useState(false)
   const [end, setEnd] = useState(props.paginacao);
-  const { clientes, setClientes, setAlertas, paginacao, cabecalho, length, alertas, filtro, setLength } = props;
+  const { clientes, usuarios, setClientes, setAlertas, paginacao, cabecalho, length, alertas, filtro, setLength } = props;
 
   useEffect(() => {
     if (filtro !== undefined && (!filtro.type || filtro.type === '') && (!filtro.customer_name || filtro.customer_name === '') && (!filtro.datetime || filtro.datetime === '')) {
@@ -43,10 +43,8 @@ function Table(props) {
             alert(error.response.data[0].message)
           }
         })
-
     }
-
-  }, [setAlertas, start, end, paginacao, length, filtro, setLength])
+  }, [setAlertas, start, end, paginacao, length, filtro, setLength, usuarios])
 
   useEffect(() => {
     if (filtro !== undefined && (!filtro.name || filtro.name === '') && (!filtro.salary || filtro.salary === '')) {
@@ -65,7 +63,6 @@ function Table(props) {
       getClientes()
     }
     else {
-      //console.log('s',filtro.salary)
       apiClientes.getCustomers()
         .then(response => {
           const result = response.data.data.filter(item => {
@@ -86,7 +83,7 @@ function Table(props) {
   return (
     <table className="table">
       <THead cabecalho={cabecalho}> </THead>
-      <TBody alertas={alertas} clientes={clientes} setEdit={setEdit} edit={edit}></TBody>
+      <TBody alertas={alertas} clientes={clientes} usuarios={usuarios} setEdit={setEdit} edit={edit}></TBody>
       <TFoot quantidade={Math.ceil(length / paginacao)} paginacao={paginacao} setEnd={setEnd} setStart={setStart}></TFoot>
     </table>
   )

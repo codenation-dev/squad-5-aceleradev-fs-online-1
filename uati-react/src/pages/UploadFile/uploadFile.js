@@ -3,23 +3,25 @@ import Dropzone from 'react-dropzone';
 import './uploadFile.css'
 import Botao from '../../componentes/Botao/Botao';
 import api from '../../services/api'
-  
-class uploadFile extends React.Component {  
+import Navbar from '../../componentes/Navbar/Navbar'
+import { estAutenticado } from '../../routes'
+
+class uploadFile extends React.Component {
     constructor(props) {
         super(props)
         this.state = {}
     }
 
-     upload(file) {
+    upload(file) {
         let fd = new FormData();
-        fd.append('file',file);
-    
-        return api.post("customers",fd,{ headers: { 'Content-Type': 'multipart/form-data' } });
+        fd.append('file', file);
+
+        return api.post("customers", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     }
 
     onDrop(files) {
 
-        this.setState({file: files[0]})
+        this.setState({ file: files[0] })
 
     }
 
@@ -35,32 +37,35 @@ class uploadFile extends React.Component {
 
     render() {
         return (
-            <div className="UploadFileContainer">
-                <div className="UploadFileBox">
-                    <div className="Fields">
-                        <center>
-                            <form onSubmit={this.uploadFile.bind(this)}>
-                            <h1 className="UploadFileTitle">Envio de arquivos</h1>
-                            <br />
-                            <div className="Dropzone">
-                                <Dropzone
-                                    accept=".csv"
-                                    onDropAccepted={this.onDrop.bind(this)}
-                                >
-                                    <div>
-                                        <h1 className="DropFile">{this.state.file ? this.state.file.name : "Solte o arquivo csv aqui ou click para selecionar."}</h1>
-                                    </div>
-                                </Dropzone>
+            <>
+                {estAutenticado() ? <Navbar></Navbar> : ''}                    
+                    <div className="UploadFileContainer">
+                        <div className="UploadFileBox">
+                            <div className="Fields">
+                                <center>
+                                    <form onSubmit={this.uploadFile.bind(this)}>
+                                        <h1 className="UploadFileTitle">Envio de arquivos</h1>
+                                        <br />
+                                        <div className="Dropzone">
+                                            <Dropzone
+                                                accept=".csv"
+                                                onDropAccepted={this.onDrop.bind(this)}
+                                            >
+                                                <div>
+                                                    <h1 className="DropFile">{this.state.file ? this.state.file.name : "Solte o arquivo csv aqui ou click para selecionar."}</h1>
+                                                </div>
+                                            </Dropzone>
+                                        </div>
+                                        <div className="Upload">
+                                            <Botao type="submit"> Enviar </Botao>
+                                        </div>
+                                    </form>
+                                </center>
                             </div>
-                            <div className="Upload">
-                                <Botao type="submit"> Enviar </Botao>
-                            </div>
-                            </form>
-                        </center>
+                        </div>
                     </div>
-                </div>
-            </div>
-        );    
+            </>
+        );
     }
 }
 

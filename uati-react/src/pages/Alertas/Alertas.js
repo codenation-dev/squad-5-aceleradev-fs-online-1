@@ -3,6 +3,8 @@ import './Alertas.css';
 import * as apiAlerts from '../../apis/alertas'
 import Table from '../../componentes/Table/Table'
 import Ordenar from '../../componentes/Ordernar/Ordenar'
+import Navbar from '../../componentes/Navbar/Navbar'
+import { estAutenticado } from '../../routes'
 
 function Alertas() {
   const [length, setLength] = useState(0)
@@ -30,11 +32,11 @@ function Alertas() {
     "Data",
     "Detalhes"
   ]
- 
 
-useEffect(() => {
+
+  useEffect(() => {
     apiAlerts.getAlerts()
-    .then(response => {
+      .then(response => {
         setLength(response.data.data.length)
         setCarregando(false)
       })
@@ -45,17 +47,20 @@ useEffect(() => {
       })
   }, [])
 
-  return (    
-    <div className="container">
-      <section className="card">
-         {!carregando ?  
-         <Fragment>
-         <Ordenar lista={lista} setFiltro={setFiltro}></Ordenar>
-         <Table cabecalho={cabecalho} length={length} filtro={filtro} alertas={alertas} setAlertas={setAlertas} paginacao={paginacao} setLength={setLength} />
-         </Fragment>
-          : 'carregando...'}
-       </section>
-    </div>
+  return (
+    <>
+      {estAutenticado() ? <Navbar></Navbar> : ''}
+      <div className="container">
+        <section className="card">
+          {!carregando ?
+            <Fragment>
+              <Ordenar lista={lista} setFiltro={setFiltro}></Ordenar>
+              <Table cabecalho={cabecalho} length={length} filtro={filtro} alertas={alertas} setAlertas={setAlertas} paginacao={paginacao} setLength={setLength} />
+            </Fragment>
+            : 'carregando...'}
+        </section>
+      </div>
+    </>
   )
 }
 

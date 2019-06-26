@@ -31,3 +31,9 @@ button {
   cursor: pointer;
 }
 
+.botao-clientes {
+  color: #1BBF77;
+  font-weight: bold;
+  width: 100%;
+  background-color: transparent;
+}

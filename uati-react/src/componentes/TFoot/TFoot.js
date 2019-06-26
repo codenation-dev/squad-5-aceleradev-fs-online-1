@@ -22,7 +22,7 @@ const TFoot = (props) => {
     return (
         <tfoot className="tFoot">
             <tr className="tFoot">
-                {rows.length > 0 ? rows : <td></td>}
+                {rows.length > 1 ? rows : <td></td>}
             </tr>
         </tfoot>
 
