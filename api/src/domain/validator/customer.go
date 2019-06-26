@@ -7,7 +7,7 @@ type CustomerURI struct {
 
 // CustomerCreation struct
 type CustomerCreation struct {
-	Name   string  `json:"name" binding:"required,max=25,min=1"`
+	Name   string  `json:"name" binding:"required,max=50,min=1"`
 	Salary float32 `json:"salary" binding:"required,min=1"`
 }
 
