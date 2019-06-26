@@ -5,8 +5,6 @@ import (
 	"app/domain/model"
 	"app/domain/validator"
 	"bytes"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -14,6 +12,9 @@ import (
 	"net/textproto"
 	"os"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockCustomer struct {
@@ -377,6 +378,6 @@ func TestCustomerController_ListCustomer(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, "{\"Records\":1,\"Data\":[{\"id\":\"1111\",\"name\":\"test\",\"salary\":1111.11}]}", w.Body.String())
+	assert.Equal(t, "{\"records\":1,\"data\":[{\"id\":\"1111\",\"name\":\"test\",\"salary\":1111.11}]}", w.Body.String())
 
 }
