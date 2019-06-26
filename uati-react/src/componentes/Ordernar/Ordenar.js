@@ -3,7 +3,7 @@ import Label from '../Label/Label'
 import Botao from '../Botao/Botao'
 import './Ordenar.css'
 
-const Ordenar = ({ lista, setLista, setFiltro }) => {
+const Ordenar = ({ lista, setFiltro }) => {
     const [itens, setItens] = useState({})
 
     const filter = (value, name) => {

@@ -24,7 +24,7 @@ class AlertasInfo extends Component {
             })
             .catch(error => {
                 if (error.response) {
-                    alert(error.response.data.erro)
+                    alert(error.response.data[0].message)
                 }
             })
     }

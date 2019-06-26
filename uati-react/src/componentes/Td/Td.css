@@ -8,6 +8,11 @@
     width: 35%; 
 }
 
+.column-clientes {
+    padding: 0;
+    width: 35%;
+}
+
 #name {
     width: 65%;
 }

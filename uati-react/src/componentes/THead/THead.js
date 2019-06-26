@@ -4,7 +4,7 @@ const THead = ({cabecalho}) => (
     <thead>
         <tr>
             {cabecalho.map((value, i) => (
-                <th className="column" id={value==='Cliente'? 'name' : ''} key={i}> {value} </th>
+                <th className="column" id={value==='Cliente' || value==='Nome'? 'name' : ''} key={i}> {value} </th>
             ))}
         </tr>
     </thead>

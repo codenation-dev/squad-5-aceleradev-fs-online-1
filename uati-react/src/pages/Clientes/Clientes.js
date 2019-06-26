@@ -1,42 +1,38 @@
 import React, { useEffect, useState, Fragment } from 'react'
-import './Alertas.css';
-import * as apiAlerts from '../../apis/alertas'
+import './clientes.css';
+import * as apiClientes from '../../apis/clientes'
 import Table from '../../componentes/Table/Table'
 import Ordenar from '../../componentes/Ordernar/Ordenar'
+import FormClientes from '../../componentes/FormClientes/FormClientes';
 
-function Alertas() {
+function Clientes() {
   const [length, setLength] = useState(0)
-  const [alertas, setAlertas] = useState([])
+  const [clientes, setClientes] = useState([])
   const [filtro, setFiltro] = useState({})
   let [carregando, setCarregando] = useState(true)
   const lista = [
     {
-      name: 'Tipo',
-      column: 'type'
+      name: 'Nome',
+      column: 'name'
     },
     {
-      name: 'Cliente',
-      column: 'customer_name'
-    },
-    {
-      name: 'Data',
-      column: 'datetime'
-    }
+      name: 'Salário',
+      column: 'salary'
+    }    
   ]
   const paginacao = 10
   const cabecalho = [
-    "Tipo",
-    "Cliente",
-    "Data",
-    "Detalhes"
+    "Nome",
+    "Salário",
+    ""
   ]
  
 
 useEffect(() => {
-    apiAlerts.getAlerts()
+    apiClientes.getCustomers()
     .then(response => {
         setLength(response.data.data.length)
-        setCarregando(false)
+        //setCarregando(false)
       })
       .catch(error => {
         if (error.response) {
@@ -48,15 +44,16 @@ useEffect(() => {
   return (    
     <div className="container">
       <section className="card">
-         {!carregando ?  
+         {/* {!carregando ?   */}
          <Fragment>
+         <FormClientes></FormClientes>
          <Ordenar lista={lista} setFiltro={setFiltro}></Ordenar>
-         <Table cabecalho={cabecalho} length={length} filtro={filtro} alertas={alertas} setAlertas={setAlertas} paginacao={paginacao} setLength={setLength} />
+         <Table cabecalho={cabecalho} length={length} filtro={filtro} clientes={clientes} setClientes={setClientes} paginacao={paginacao} setLength={setLength} />
          </Fragment>
-          : 'carregando...'}
+          {/* : 'carregando...'} */}
        </section>
     </div>
   )
 }
 
-export default Alertas;
+export default Clientes;

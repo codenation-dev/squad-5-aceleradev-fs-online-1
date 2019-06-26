@@ -13,3 +13,14 @@ a:link
 { 
 text-decoration:none; 
 }
+
+input {
+        width: 100%;
+}
+
+.input {
+    border: none;
+    width: 100%;
+}
+
+

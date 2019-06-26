@@ -1,7 +1,7 @@
 import protocolo from './configuracao'
 
 export function getCustomers() {
-    const url = "/customers"
+    const url = "/customers?limit=-1&offset=0"
     return protocolo.get(url)   
 }
 
@@ -10,8 +10,8 @@ export function postCustomer(payload) {
     return protocolo.post(url, payload)
 }
 
-export function putCustomer(payload) {
-    const url =`/customer/${payload.id}`
+export function putCustomer(id, payload) {
+    const url =`/customer/${id}`
     return protocolo.put(url, payload)
 }
 

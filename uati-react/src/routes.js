@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard/dashboard'
 import Conta from './pages/Conta/Conta'
 import Alertas from './pages/Alertas/Alertas'
 import AlertasInfo from './pages/AlertasInfo/AlertasInfo'
+import Clientes from './pages/Clientes/Clientes'
 
 const Routes = () => (
     <BrowserRouter>
@@ -18,6 +19,7 @@ const Routes = () => (
             <Route exact path="/conta" component={Conta} />
             <Route exact path="/alertas" component={Alertas} />
             <Route exact path="/alertas/:alerta" component={({match}) => (<AlertasInfo id={match.params.alerta} />)} />
+            <Route exact path="/clientes" component={Clientes} />
          
         </Switch>
     </BrowserRouter>
