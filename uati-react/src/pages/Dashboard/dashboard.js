@@ -5,7 +5,6 @@ import { Grid, Row, Col } from "react-bootstrap";
 import api from '../../services/api';
 import Card from '../../componentes/Card/Card';
 import StatsCard from '../../componentes/StatsCard/StatsCard';
-import { func } from "prop-types";
 
 class Dashboard extends Component {
     constructor(props) {
