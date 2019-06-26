@@ -4,6 +4,7 @@ import Botao from '../../componentes/Botao/Botao'
 import Legenda from '../../componentes/Legenda/Legenda'
 import Campo from '../../componentes/Campo/Campo'
 import './Login.css'
+import api from '../../services/api'
 
 class Login extends Component {
   constructor(props) {
@@ -15,20 +16,25 @@ class Login extends Component {
     this.state = { desabilitado: true }
   }
 
-  enviaDados = (evento) => {
+  enviaDados = async (evento) => {
     evento.preventDefault()
 
     const campoEmail = this.emailRef.current
     const campoSenha = this.senhaRef.current
 
     const dados = {
-      email: campoEmail.getValor(),
-      senha: campoSenha.getValor()
+      username: campoEmail.getValor(),
+      password: campoSenha.getValor()
     }
 
-    this.props.logaUsuario(dados)
+    try {
+      await api.post("auth", dados)
+    } catch (e) {
+      alert("Usuário e senha inválido")
+      return
+    }
 
-    this.props.history.push('/')
+    this.props.history.push('/dashboard')
   }
 
   habilitaOuDesabilitaBotao = () => {
@@ -47,11 +53,11 @@ class Login extends Component {
       <main className="login">
         <div className="form">      
         <h1>Login</h1>
-        {/* <p>Entre com seu email e senha.</p> */}
+        {/* <p>Entre com seu usuário e senha.</p> */}
         
         <form onSubmit={this.enviaDados}>
-          <Legenda htmlFor="email">Email:</Legenda>
-          <Campo ref={this.emailRef} id="email" type="email" name="email" placeholder="Email" required onChange={this.habilitaOuDesabilitaBotao} />
+          <Legenda htmlFor="email">Usuário:</Legenda>
+          <Campo ref={this.emailRef} id="email" type="text" name="email" placeholder="Usuário" required onChange={this.habilitaOuDesabilitaBotao} />
           
           <Legenda htmlFor="senha">Senha:</Legenda>
           <Campo ref={this.senhaRef} id="senha" type="password" name="senha" placeholder="Senha" required minLength={6} onChange={this.habilitaOuDesabilitaBotao} />
