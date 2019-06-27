@@ -29,7 +29,7 @@ class PrivateRouteLogin extends React.Component {
     render() {
         const Componente = this.props.component
         if (!estAutenticado()) {
-            return <Route render={() => <Componente {...this.props}></Componente>}></Route>
+            return <Route render={(props) => <Componente {...this.props} {...props}></Componente>}></Route>
             }
         else {
             return <Redirect to="/"></Redirect>
@@ -46,7 +46,7 @@ const Routes = () => (
             <PrivateRoute path="/upload" component={UploadFile} />
             <PrivateRouteLogin path="/conta" component={Conta} />
             <PrivateRoute exact path="/alertas" component={Alertas} />
-            <PrivateRoute exact path="/alertas/:alerta" component={({match}) => (<AlertasInfo id={match.params.alerta} />)} />
+            <Route exact path="/alertas/:alerta" component={({match}) => (<AlertasInfo id={match.params.alerta} />)} />
             <PrivateRoute path="/clientes" component={Clientes} />
          
         </Switch>

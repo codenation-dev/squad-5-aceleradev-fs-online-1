@@ -26,7 +26,7 @@ class AlertasInfo extends Component {
             })
             .catch(error => {
                 if (error.response) {
-                    alert(error.response.data[0].message)
+                    alert('Ocorreu um erro!')
                 }
             })
     }
