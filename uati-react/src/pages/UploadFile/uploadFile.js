@@ -19,7 +19,7 @@ class uploadFile extends React.Component {
         return api.post("customers", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     }
 
-    onDrop(files) {
+    onDrop = (files) => {
 
         this.setState({ file: files[0] })
 
